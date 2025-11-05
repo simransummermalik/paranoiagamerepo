@@ -980,6 +980,53 @@ Current Articles: ${currentArticles}
         <RedditForum
           onClose={() => setShowRedditForum(false)}
           investigationDepth={storyEngine.getInvestigationProgress()}
+          userBehavior={behaviorTracker.getProfile()}
+          onPostClick={(post) => {
+            // Track forum engagement using the appropriate method
+            // BehaviorTracker doesn't have a trackAction method, so we'll track this as a site visit
+            behaviorTracker.trackSiteVisit(`reddit/post/${post.id}`);
+
+            // Advance story based on post content
+            if (post.flair === "Official" || post.author === "u/charlotte_it_admin") {
+              storyEngine.advanceInvestigation(4);
+              const profile = behaviorTracker.getProfile();
+              const response = storyEngine.processUserAction(
+                { type: "forum_discovery", discovery: "official_warning" },
+                profile
+              );
+              if (response.newMilestone) {
+                setInvestigationMilestones(prev => [...prev, response.newMilestone]);
+              }
+            }
+
+            if (post.flair === "Research" || post.content.includes("DARPA")) {
+              storyEngine.advanceInvestigation(8);
+              showNotification("📁 DARPA connection documented in system logs", "info", 4000);
+              const profile = behaviorTracker.getProfile();
+              const response = storyEngine.processUserAction(
+                { type: "forum_discovery", discovery: "darpa_files" },
+                profile
+              );
+              if (response.newMilestone) {
+                setInvestigationMilestones(prev => [...prev, response.newMilestone]);
+              }
+            }
+
+            if (post.isYours) {
+              showNotification("⚠ Timeline anomaly: Post authored by your account before login", "warning", 6000);
+              storyEngine.advanceInvestigation(6);
+              const profile = behaviorTracker.getProfile();
+              storyEngine.processUserAction(
+                { type: "forum_discovery", discovery: "timeline_corruption" },
+                profile
+              );
+            }
+
+            if (post.author === "u/[deleted]") {
+              storyEngine.advanceInvestigation(3);
+              showNotification("🔍 Deleted post metadata recovered", "info", 3000);
+            }
+          }}
         />
       )}
 
@@ -1043,7 +1090,12 @@ Current Articles: ${currentArticles}
             onClick={() => setShowRedditForum(!showRedditForum)}
             title="r/UNCCharlotteCSE"
           >
-            <span style={{ fontSize: '20px' }}>👾</span>
+            <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style={{ width: '24px', height: '24px' }}>
+              <g>
+                <circle fill="#FF4500" cx="10" cy="10" r="10"></circle>
+                <path fill="#FFF" d="M16.67,10A1.46,1.46,0,0,0,14.2,9a7.12,7.12,0,0,0-3.85-1.23L11,4.65,13.14,5.1a1,1,0,1,0,.13-0.61L10.82,4a0.31,0.31,0,0,0-.37.24L9.71,7.71a7.14,7.14,0,0,0-3.9,1.23A1.46,1.46,0,1,0,4.2,11.33a2.87,2.87,0,0,0,0,.44c0,2.24,2.61,4.06,5.83,4.06s5.83-1.82,5.83-4.06a2.87,2.87,0,0,0,0-.44A1.46,1.46,0,0,0,16.67,10Zm-10,1a1,1,0,1,1,1,1A1,1,0,0,1,6.67,11Zm5.81,2.75a3.84,3.84,0,0,1-2.47.77,3.84,3.84,0,0,1-2.47-.77,0.27,0.27,0,0,1,.38-0.38A3.27,3.27,0,0,0,10,14a3.28,3.28,0,0,0,2.09-.61A0.27,0.27,0,1,1,12.48,13.79Zm-0.18-1.71a1,1,0,1,1,1-1A1,1,0,0,1,12.29,12.08Z"></path>
+              </g>
+            </svg>
           </div>
         </div>
 
