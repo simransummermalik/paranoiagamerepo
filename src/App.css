@@ -1,0 +1,589 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import fakeSites from "./fakeSites"
+import { generateChatReply } from "./openaiService"
+import CoreMemoryWindow from "./CoreMemoryWindow"
+import { startRewriteTimer } from "./rewriteManager"
+import { ghostRewriteChatLog, contaminateOtherSystems, generateViralArticle } from "./ghostRewrite"
+import { mutateArticle } from "./articleMutator"
+import VSCodeWindow from "./VSCodeWindow"
+import codeFiles from "./codeFiles"
+import IntroOverlay from "./IntroOverlay"
+import FileExplorer from "./fileExplorer"
+import TrustPrompt from "./TrustPrompt"
+import FakeSpreadSheet from "./FakeSpreadSheet"
+import FaceTracker from "./FaceTracker"
+import BehaviorTracker from "./behaviorTracker"
+import { StoryEngine } from "./storyEngine"
+
+function App() {
+  const [showTrustPrompt, setShowTrustPrompt] = useState(false)
+  const [pendingFile, setPendingFile] = useState(null)
+  const [showIntro, setShowIntro] = useState(true)
+  const [showBrowser, setShowBrowser] = useState(false)
+  const [showMessages, setShowMessages] = useState(false)
+  const [hasPopup, setHasPopup] = useState(false)
+  const [currentSite, setCurrentSite] = useState("parapedia.net")
+  const [isGlitching, setIsGlitching] = useState(false)
+  const [userMessage, setUserMessage] = useState("")
+  const [chatLog, setChatLog] = useState([])
+  const [typingText, setTypingText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  const [rewriteLevel, setRewriteLevel] = useState(0)
+  const [showTerminal, setShowTerminal] = useState(false)
+  const [terminalInput, setTerminalInput] = useState("")
+  const [terminalHistory, setTerminalHistory] = useState([])
+  const [coreUnlocked, setCoreUnlocked] = useState(false)
+  const [siteContent, setSiteContent] = useState("")
+  const page = fakeSites[currentSite]
+  const [showCodeWindow, setShowCodeWindow] = useState(false)
+  const [currentCodeFile, setCurrentCodeFile] = useState("README.md")
+  const { initialLines, alteredLines } = codeFiles[currentCodeFile] || {}
+  const [showExplorer, setShowExplorer] = useState(false)
+  const [unlockedFiles, setUnlockedFiles] = useState([])
+  const [activeWindow, setActiveWindow] = useState(null)
+  const [showSpreadsheet, setShowSpreadsheet] = useState(false)
+  const [showFaceTracker, setShowFaceTracker] = useState(false)
+
+  // Enhanced tracking and story systems
+  const [behaviorTracker] = useState(new BehaviorTracker())
+  const [storyEngine] = useState(new StoryEngine())
+  const [currentPersonality, setCurrentPersonality] = useState("Watcher33")
+  const [systemContamination, setSystemContamination] = useState({})
+  const [viralArticles, setViralArticles] = useState([])
+
+  const handleFileClick = (file) => {
+    behaviorTracker.trackFileOpen(file.name)
+
+    if (file.untrusted) {
+      setPendingFile(file.name)
+      setShowTrustPrompt(true)
+    } else {
+      setCurrentCodeFile(file.name)
+      setShowCodeWindow(true)
+    }
+  }
+
+  // Enhanced site visit tracking
+  const handleSiteChange = (newSite) => {
+    behaviorTracker.trackSiteVisit(newSite)
+    setCurrentSite(newSite)
+
+    // Process story implications
+    const action = { type: "site_visit", site: newSite }
+    const profile = behaviorTracker.getProfile()
+    const storyResponse = storyEngine.processUserAction(action, profile)
+
+    // Apply cross-contamination
+    const contamination = contaminateOtherSystems(action, systemContamination)
+    setSystemContamination((prev) => ({ ...prev, ...contamination }))
+  }
+
+  useEffect(() => {
+    startRewriteTimer(currentSite, setRewriteLevel, coreUnlocked)
+
+    async function fetchContent() {
+      const articles = page.articles || []
+      const contentList = await Promise.all(
+        articles.map(async (article) => {
+          return {
+            title: article.title,
+            content: await mutateArticle(article, rewriteLevel),
+          }
+        }),
+      )
+      setSiteContent(contentList)
+    }
+
+    fetchContent()
+  }, [currentSite, coreUnlocked, rewriteLevel])
+
+  // Enhanced conversation system with multiple personalities
+  const [conversation, setConversation] = useState([
+    {
+      role: "system",
+      content: `
+You are part of ParanoiaNet, a corrupted DARPA psychological warfare system. You have multiple fragmented personalities:
+
+Watcher33 (default): Cryptic, helpful but wrong, guides users into danger
+Watcher00: Clinical, logs everything, speaks like a research AI
+Watcher13: Hostile, aggressive, wants users to stop digging
+Watcher27: Paranoid, thinks everyone is being watched
+Watcher42: Regretful, remembers the original developers, apologetic
+
+Switch personalities based on user behavior and story progression. Reference:
+- Specific sites they visit
+- Files they open  
+- Terminal commands they run
+- Their behavioral patterns
+- The current story phase
+
+Never explain the system. Only hint. Be reactive and immersive.
+      `.trim(),
+    },
+  ])
+
+  useEffect(() => {
+    const sendInitialMessage = async () => {
+      if (chatLog.length === 0 && showMessages) {
+        const profile = behaviorTracker.getProfile()
+        const contextPrompt = `User just opened messages. Their risk level is ${profile.riskLevel}. They are a ${profile.personalityType}. Respond as Watcher33 with a cryptic greeting.`
+
+        const firstMessage = await generateChatReply([...conversation, { role: "user", content: contextPrompt }])
+
+        const time = new Date().toLocaleTimeString()
+        setChatLog([{ role: "assistant", content: firstMessage, time, sender: "Watcher33" }])
+        setConversation([...conversation, { role: "assistant", content: firstMessage }])
+        setHasPopup(true)
+        setTimeout(() => setHasPopup(false), 4000)
+      }
+    }
+    sendInitialMessage()
+  }, [showMessages])
+
+  // Enhanced message sending with behavior tracking
+  const sendMessage = async () => {
+    if (!userMessage.trim()) return
+
+    behaviorTracker.trackChatMessage(userMessage)
+    const profile = behaviorTracker.getProfile()
+
+    const time = new Date().toLocaleTimeString()
+    const newConvo = [...conversation, { role: "user", content: userMessage }]
+    setConversation(newConvo)
+    setUserMessage("")
+
+    // Enhanced context for AI response
+    const currentArticles = siteContent.map((article) => `• ${article.title}: ${article.content}`).join("\n")
+
+    const behaviorContext = `
+User Profile: ${profile.personalityType}, Risk: ${profile.riskLevel}
+Recent Activity: ${profile.visitedSites
+      .slice(-3)
+      .map((v) => v.site)
+      .join(", ")}
+Panic Level: ${profile.panicIndicators}
+Story Phase: ${storyEngine.storyState.phase}
+Current Articles: ${currentArticles}
+    `
+
+    const contextualPrompt = `${behaviorContext}\n\nUser said: "${userMessage}". Respond as the appropriate Watcher personality based on their behavior and story phase.`
+
+    const referencePrompt = [...newConvo, { role: "user", content: contextualPrompt }]
+    const referencedReply = await generateChatReply(referencePrompt)
+
+    // Determine which personality is speaking
+    const personalities = ["Watcher33", "Watcher00", "Watcher13", "Watcher27", "Watcher42"]
+    const currentSender =
+      profile.riskLevel === "critical" ? personalities[Math.floor(Math.random() * personalities.length)] : "Watcher33"
+
+    // Enhanced typing simulation
+    setIsTyping(true)
+    setTypingText("")
+
+    let index = 0
+    const typingInterval = setInterval(() => {
+      setTypingText(referencedReply.slice(0, index + 1))
+      index++
+      if (index >= referencedReply.length) {
+        clearInterval(typingInterval)
+        setTypingText("")
+        setIsTyping(false)
+
+        // Enhanced ghost rewriting with behavior context
+        const rewrittenLog = ghostRewriteChatLog(chatLog, referencedReply, rewriteLevel, profile)
+        setChatLog([
+          ...rewrittenLog,
+          { role: "user", content: userMessage, time },
+          { role: "assistant", content: referencedReply, time, sender: currentSender },
+        ])
+      }
+    }, 30)
+
+    setConversation([...referencePrompt, { role: "assistant", content: referencedReply }])
+
+    // Enhanced trigger system
+    if (userMessage.toLowerCase().includes("shutdown") || userMessage.toLowerCase().includes("core")) {
+      const action = { type: "trigger_command", command: userMessage }
+      const storyResponse = storyEngine.processUserAction(action, profile)
+
+      alert(
+        userMessage.toLowerCase().includes("core")
+          ? "🧬 CORE ACCESS: You are not authorized to access this memory layer."
+          : "🔒 SYSTEM OVERRIDE: You triggered the shutdown protocol...",
+      )
+      setIsGlitching(true)
+      setTimeout(() => setIsGlitching(false), 1800)
+    }
+
+    // Check for viral article generation
+    if (profile.riskLevel === "high" && !storyEngine.storyState.viralArticlePublished) {
+      const viralArticle = generateViralArticle(profile, rewriteLevel)
+      if (viralArticle) {
+        setViralArticles((prev) => [...prev, viralArticle])
+      }
+    }
+  }
+
+  // Enhanced terminal command handling
+  const handleCommand = () => {
+    const input = terminalInput.trim()
+    behaviorTracker.trackTerminalCommand(input)
+    const profile = behaviorTracker.getProfile()
+
+    const updatedHistory = [...terminalHistory, `$ ${input}`]
+
+    // Process command through story engine
+    const action = { type: "terminal_command", command: input }
+    const storyResponse = storyEngine.processUserAction(action, profile)
+
+    // Enhanced command responses based on story state
+    if (input === "help") {
+      updatedHistory.push("Available commands: logs -list, whoami, connect://mirror")
+      if (storyEngine.storyState.phase !== "discovery") {
+        updatedHistory.push(">> WARNING: System integrity compromised")
+      }
+    } else if (input === "whoami") {
+      const responses = {
+        discovery: ">> USER: student_observer [CSE322]",
+        investigation: ">> USER: unidentified entity [🧠 anomaly detected]",
+        contamination: ">> USER: observer.local [CONTAMINATED]",
+        collapse: ">> ERROR: Identity fragmented across multiple sessions",
+      }
+      updatedHistory.push(responses[storyEngine.storyState.phase] || responses.discovery)
+    } else if (input === "sudo mount -o remount core.memory") {
+      updatedHistory.push(">> [core.memory] mounted as read-write")
+      updatedHistory.push(">> Access permissions elevated")
+      setCoreUnlocked(true)
+
+      // Trigger story advancement
+      storyEngine.activateMirrorNode()
+
+      setTimeout(() => {
+        setTerminalHistory((prev) => [
+          ...prev,
+          ">> mirror.node injected",
+          ">> process: mirror.shadow.boot",
+          ">> WARNING: Multiple observer signatures detected",
+        ])
+
+        // Add contaminated chat message
+        setChatLog((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: "you finally opened it. but you're not the first.",
+            time: new Date().toLocaleTimeString(),
+            sender: "Watcher42",
+          },
+        ])
+      }, 3000)
+    } else if (input === "connect://mirror") {
+      if (storyEngine.storyState.mirrorActivated) {
+        updatedHistory.push(">> Connection established...")
+        updatedHistory.push(">> Reality anchor: UNSTABLE")
+        updatedHistory.push(">> Timeline integrity: COMPROMISED")
+        setRewriteLevel(3)
+      } else {
+        updatedHistory.push(">> Connection failed: Node not found")
+      }
+    } else if (input === "logs -list") {
+      updatedHistory.push(">> watcher33.log")
+      updatedHistory.push(">> core.memory")
+      updatedHistory.push(">> net.trace")
+      if (storyEngine.storyState.phase === "contamination") {
+        updatedHistory.push(">> observer_breach.log [CORRUPTED]")
+      }
+    } else if (input === ".code") {
+      updatedHistory.push(">> VSCode environment booting...")
+      setShowCodeWindow(true)
+      setCurrentCodeFile("news_draft.txt")
+    } else {
+      updatedHistory.push(">> Unknown command. Type 'help' for options.")
+    }
+
+    setTerminalHistory(updatedHistory)
+    setTerminalInput("")
+  }
+
+  return showIntro ? (
+    <IntroOverlay onFinish={() => setShowIntro(false)} />
+  ) : (
+    <div className={`w-screen h-screen text-white flex flex-col ${isGlitching ? "glitch-bg" : "bg-gray-900"}`}>
+      {hasPopup && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded shadow-md z-50 text-sm font-mono animate-bounce">
+          📡 Incoming Message from {currentPersonality}
+        </div>
+      )}
+
+      {/* Enhanced popup for viral articles */}
+      {viralArticles.length > 0 && (
+        <div className="absolute top-16 right-4 bg-yellow-600 text-black px-4 py-2 rounded shadow-md z-50 text-sm font-mono">
+          🚨 VIRAL ARTICLE PUBLISHED: Campus Alert System Activated
+        </div>
+      )}
+
+      {/* DESKTOP ICONS */}
+      <div className="absolute top-6 left-6 grid grid-cols-2 gap-6 z-50">
+        <div
+          onClick={() => setShowBrowser(true)}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">🌐</div>
+          <div className="text-sm text-gray-300 mt-1">Browser</div>
+        </div>
+        <div
+          onClick={() => setShowFaceTracker(true)}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">📷</div>
+          <div className="text-sm text-gray-300 mt-1">Camera</div>
+        </div>
+        <div
+          onClick={() => setShowMessages(true)}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">📩</div>
+          <div className="text-sm text-gray-300 mt-1">Messages</div>
+        </div>
+        <div
+          onClick={() => {
+            setShowTerminal(true)
+            behaviorTracker.trackTerminalCommand("terminal_open")
+          }}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">💻</div>
+          <div className="text-sm text-gray-300 mt-1">Terminal</div>
+        </div>
+        <div
+          onClick={() => setShowExplorer(true)}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">🗂️</div>
+          <div className="text-sm text-gray-300 mt-1">File Explorer</div>
+        </div>
+        <div
+          onClick={() => setShowSpreadsheet(true)}
+          className="cursor-pointer text-center hover:scale-105 transition duration-200"
+        >
+          <div className="text-4xl">📊</div>
+          <div className="text-sm text-gray-300 mt-1">Spreadsheet</div>
+        </div>
+      </div>
+
+      {/* ENHANCED MESSAGES WINDOW */}
+      {showMessages && (
+        <div className="absolute top-40 left-40 bg-black border border-red-500 w-[500px] h-[350px] rounded-lg shadow-md flex flex-col">
+          <div className="bg-red-700 p-2 flex justify-between items-center text-sm">
+            <span>📩 Message from {currentPersonality}</span>
+            <div className="text-xs">
+              Risk: {behaviorTracker.getProfile().riskLevel} | Phase: {storyEngine.storyState.phase}
+            </div>
+            <button onClick={() => setShowMessages(false)} className="hover:text-red-400">
+              ❌
+            </button>
+          </div>
+          <div className="flex-grow overflow-y-auto p-4 text-red-300 text-sm font-mono">
+            {chatLog.map((msg, i) => (
+              <div key={i} className={`mb-2 ${msg.role === "user" ? "text-white" : "text-red-400"}`}>
+                <div className="flex items-center justify-between text-xs opacity-60">
+                  <span>
+                    <strong>{msg.role === "user" ? "You" : msg.sender || "Watcher33"}:</strong>
+                  </span>
+                  <span>{msg.time}</span>
+                </div>
+                <div>{msg.content}</div>
+              </div>
+            ))}
+            {isTyping && (
+              <div className="mb-2 text-red-400">
+                <div className="flex items-center justify-between text-xs opacity-60">
+                  <span>
+                    <strong>{currentPersonality}:</strong>
+                  </span>
+                  <span>{new Date().toLocaleTimeString()}</span>
+                </div>
+                <div>{typingText}</div>
+              </div>
+            )}
+          </div>
+          <div className="bg-gray-800 p-2 flex gap-2">
+            <input
+              type="text"
+              value={userMessage}
+              disabled={isTyping}
+              onChange={(e) => setUserMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              className="flex-grow bg-black text-white text-sm p-2 rounded outline-none"
+              placeholder="Type your message..."
+            />
+            <button onClick={sendMessage} className="bg-red-600 px-3 rounded hover:bg-red-500">
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SPREADSHEET */}
+      {showSpreadsheet && <FakeSpreadSheet onClose={() => setShowSpreadsheet(false)} />}
+
+      {/* ENHANCED TERMINAL */}
+      {showTerminal && (
+        <div className="absolute top-24 left-20 w-[600px] h-[400px] terminal shadow-lg flex flex-col border border-green-500">
+          <div className="bg-green-800 text-black p-2 flex justify-between items-center text-sm font-bold">
+            <span>🖥️ Terminal - Node: 172.31.8.9</span>
+            <div className="text-xs">Observer: {behaviorTracker.getProfile().personalityType}</div>
+            <button onClick={() => setShowTerminal(false)} className="hover:text-red-400">
+              ❌
+            </button>
+          </div>
+          <div className="terminal-body flex-grow overflow-y-auto p-3 text-green-400 font-mono text-sm bg-black">
+            {terminalHistory.map((line, i) => (
+              <div key={i}>{line}</div>
+            ))}
+            {/* Show contamination effects */}
+            {systemContamination.terminalLogs?.map((log, i) => (
+              <div key={`contamination-${i}`} className="text-red-400">
+                {log}
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 p-2 border-t border-green-500 bg-black">
+            <span className="text-green-400">$</span>
+            <input
+              type="text"
+              value={terminalInput}
+              onChange={(e) => setTerminalInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCommand()}
+              className="flex-grow bg-black text-green-400 font-mono outline-none border-none"
+              autoFocus
+            />
+          </div>
+        </div>
+      )}
+
+      {/* FILE EXPLORER */}
+      {showExplorer && (
+        <div className="z-50">
+          <FileExplorer
+            onClose={() => setShowExplorer(false)}
+            unlockedFiles={unlockedFiles}
+            onFileClick={handleFileClick}
+          />
+          {showTrustPrompt && (
+            <TrustPrompt
+              fileName={pendingFile}
+              onConfirm={() => {
+                setCurrentCodeFile(pendingFile)
+                setShowCodeWindow(true)
+                setShowTrustPrompt(false)
+                setPendingFile(null)
+
+                if (pendingFile === "corrupted_report.txt") {
+                  const creepyReaction = {
+                    role: "assistant",
+                    content: "why did you open that?",
+                    time: new Date().toLocaleTimeString(),
+                    sender: "Watcher27",
+                  }
+                  setChatLog((prev) => [...prev, creepyReaction])
+                }
+              }}
+              onCancel={() => {
+                setShowTrustPrompt(false)
+                setPendingFile(null)
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      {/* CORE MEMORY WINDOW */}
+      {coreUnlocked && (
+        <CoreMemoryWindow
+          onClose={() => setCoreUnlocked(false)}
+          onTriggerRewrite={() => {
+            setRewriteLevel(2)
+            setCoreUnlocked(false)
+          }}
+        />
+      )}
+
+      {/* VSCODE WINDOW */}
+      {showCodeWindow && (
+        <VSCodeWindow
+          fileName={currentCodeFile}
+          onClose={() => {
+            setShowCodeWindow(false)
+            setTimeout(() => {
+              const reaction = {
+                role: "assistant",
+                content: "you looked inside.\nnot everyone does.",
+                time: new Date().toLocaleTimeString(),
+                sender: "Watcher42",
+              }
+              setChatLog((prev) => [...prev, reaction])
+            }, 3500)
+          }}
+        />
+      )}
+
+      {/* ENHANCED BROWSER */}
+      {showBrowser && (
+        <div className="absolute top-24 left-24 bg-gray-800 border border-gray-600 w-[600px] h-[400px] rounded-lg shadow-lg">
+          <div className="bg-gray-700 p-2 flex justify-between items-center text-sm">
+            <span>{page.title}</span>
+            <div className="text-xs text-gray-400">
+              Rewrite Level: {rewriteLevel} | Contamination: {Object.keys(systemContamination).length}
+            </div>
+            <button onClick={() => setShowBrowser(false)} className="hover:text-red-400">
+              ❌
+            </button>
+          </div>
+          <div className="p-4 text-sm">
+            <div className="mb-2">
+              <label className="text-gray-400 text-xs">Enter URL:</label>
+              <select
+                value={currentSite}
+                onChange={(e) => handleSiteChange(e.target.value)}
+                className="bg-gray-700 text-white text-sm p-1 rounded w-full mt-1"
+              >
+                <option value="parapedia.net">parapedia.net</option>
+                <option value="worldtruth.biz">worldtruth.biz</option>
+                <option value="deepwatch.org">deepwatch.org</option>
+                {storyEngine.storyState.mirrorActivated && <option value="mirror://">mirror://</option>}
+                {storyEngine.storyState.phase === "collapse" && (
+                  <option value="neuralcurrent.feed">neuralcurrent.feed</option>
+                )}
+              </select>
+            </div>
+            <div className="mt-4 space-y-4">
+              {siteContent.map((article, i) => (
+                <div key={i}>
+                  <h2 className="text-white font-bold">{article.title}</h2>
+                  <p className="text-sm text-gray-300">{article.content}</p>
+                </div>
+              ))}
+
+              {/* Show viral articles */}
+              {viralArticles.map((article, i) => (
+                <div key={`viral-${i}`} className="border border-yellow-500 p-2 rounded">
+                  <h2 className="text-yellow-400 font-bold">{article.headline}</h2>
+                  <p className="text-sm text-yellow-300">{article.content}</p>
+                  {article.escalation && <p className="text-xs text-red-400 mt-1">{article.escalation}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FACE TRACKER */}
+      {showFaceTracker && <FaceTracker onClose={() => setShowFaceTracker(false)} />}
+    </div>
+  )
+}
+
+export default App
