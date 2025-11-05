@@ -5,7 +5,7 @@
 ParanoiaNet implements a **behavioral profiling system** that simulates advanced AI surveillance. While labeled as "NLP" (Natural Language Processing), it's actually a sophisticated rule-based behavioral tracking system that creates the illusion of mind-reading by monitoring user actions and adapting content in real-time.
 
 ## Architecture
-
+comment check
 ### Core Components
 
 ```
