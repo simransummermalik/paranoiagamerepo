@@ -23,9 +23,10 @@ import NinerNetLogin from "./NinerNetLogin"
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [showTerminalOnly, setShowTerminalOnly] = useState(false) // Terminal screen after login
+  const [showIntro, setShowIntro] = useState(false) // Incident report after terminal
   const [showTrustPrompt, setShowTrustPrompt] = useState(false)
   const [pendingFile, setPendingFile] = useState(null)
-  const [showIntro, setShowIntro] = useState(true)
   const [showBrowser, setShowBrowser] = useState(false)
   const [showMessages, setShowMessages] = useState(false)
   const [hasPopup, setHasPopup] = useState(false)
@@ -504,17 +505,163 @@ Current Articles: ${currentArticles}
     setTerminalInput("")
   }
 
+  // Handle terminal commands in initial terminal screen
+  const handleTerminalOnlyCommand = (input) => {
+    const trimmed = input.trim()
+    const updated = [...terminalHistory, `[${currentUser}@lab-node-47]$ ${trimmed}`, ``]
+
+    if (trimmed === 'help') {
+      updated.push('Available commands:')
+      updated.push('  ls              - List files and directories')
+      updated.push('  ifconfig        - Display network configuration')
+      updated.push('  nmap            - Network scanner')
+      updated.push('  whoami          - Display current user')
+      updated.push('  cat             - Display file contents')
+      updated.push('  exit            - Exit terminal session')
+      updated.push('')
+    } else if (trimmed === 'ls' || trimmed === 'ls -la') {
+      updated.push('drwxr-xr-x  2 student  staff    512 Jan 15 14:23 .')
+      updated.push('drwxr-xr-x 18 root     staff   1024 Jan 10 08:42 ..')
+      updated.push('-rw-r--r--  1 student  staff   2048 Jan 15 14:20 network_scan.log')
+      updated.push('-rw-r--r--  1 student  staff    874 Jan 12 09:15 incident_report.txt')
+      updated.push('-rwxr-xr-x  1 student  staff  15230 Jan 08 11:05 lab_monitor.sh')
+      updated.push('')
+    } else if (trimmed === 'ifconfig' || trimmed === 'ipconfig') {
+      updated.push('eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500')
+      updated.push('        inet 172.16.47.23  netmask 255.255.255.0  broadcast 172.16.47.255')
+      updated.push('        inet6 fe80::a00:27ff:fe4e:66a1  prefixlen 64  scopeid 0x20<link>')
+      updated.push('        ether 08:00:27:4e:66:a1  txqueuelen 1000  (Ethernet)')
+      updated.push('')
+    } else if (trimmed.startsWith('nmap') || trimmed === 'nmap -sn 172.16.47.0/24') {
+      updated.push('Starting Nmap 7.92 ( https://nmap.org )')
+      updated.push('Nmap scan report for 172.16.47.1')
+      updated.push('Host is up (0.00012s latency).')
+      updated.push('')
+      updated.push('Nmap scan report for 172.16.47.23 (lab-node-47.uncc.edu)')
+      updated.push('Host is up (0.00001s latency).')
+      updated.push('')
+      updated.push('Nmap scan report for 172.16.47.88')
+      updated.push('Host is up (0.15432s latency).')
+      updated.push('Warning: Unusual response patterns detected.')
+      updated.push('')
+      updated.push('Nmap done: 3 hosts up scanned in 2.47 seconds')
+      updated.push('')
+    } else if (trimmed === 'nmap 172.16.47.88' || trimmed === 'nmap -sV 172.16.47.88') {
+      updated.push('Starting Nmap 7.92 ( https://nmap.org )')
+      updated.push('Nmap scan report for 172.16.47.88')
+      updated.push('Host is up (0.15s latency).')
+      updated.push('PORT      STATE    SERVICE       VERSION')
+      updated.push('22/tcp    open     ssh           OpenSSH 7.4')
+      updated.push('80/tcp    open     http          nginx 1.18.0')
+      updated.push('3389/tcp  filtered unknown')
+      updated.push('8080/tcp  open     http-proxy    Unknown')
+      updated.push('8443/tcp  open     ssl/unknown')
+      updated.push('')
+      updated.push('Warning: Host identified as DARPA research node')
+      updated.push('Warning: Behavioral monitoring system detected')
+      updated.push('')
+    } else if (trimmed === 'cat incident_report.txt' || trimmed === 'cat incident_report.txt') {
+      updated.push('===========================================')
+      updated.push('  NETWORK SECURITY INCIDENT REPORT')
+      updated.push('  Classification: CONFIDENTIAL')
+      updated.push('===========================================')
+      updated.push('')
+      updated.push('Incident detected on network 172.16.47.0/24')
+      updated.push('Anomalous traffic patterns observed from node 172.16.47.88')
+      updated.push('')
+      updated.push('Press any key to view full report...')
+      updated.push('')
+
+      // Trigger intro overlay after viewing incident report
+      setTimeout(() => {
+        setShowTerminalOnly(false)
+        setShowIntro(true)
+      }, 1500)
+    } else if (trimmed === 'whoami') {
+      updated.push(currentUser || 'student')
+      updated.push('')
+    } else if (trimmed === 'exit' || trimmed === 'quit') {
+      updated.push('Exiting terminal session...')
+      updated.push('')
+      setTimeout(() => {
+        setShowTerminalOnly(false)
+        setShowIntro(true)
+      }, 800)
+    } else if (trimmed === '') {
+      // Empty command, just add prompt
+    } else {
+      updated.push(`bash: ${trimmed}: command not found`)
+      updated.push('')
+    }
+
+    setTerminalHistory(updated)
+  }
+
   // Handle login
   const handleLogin = (username) => {
     setCurrentUser(username)
     setIsLoggedIn(true)
+    setShowTerminalOnly(true) // Show terminal first
     behaviorTracker.trackSiteVisit('ninernet_login')
     storyEngine.advanceInvestigation(1) // Subtle start - just 1%
+
+    // Initialize terminal with login message
+    setTerminalHistory([
+      `Connected to lab-node-47.uncc.edu`,
+      `Last login: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+      ``,
+      `Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-90-generic x86_64)`,
+      ``,
+      ` * Documentation:  https://help.ubuntu.com`,
+      ` * Management:     https://landscape.canonical.com`,
+      ` * Support:        https://ubuntu.com/advantage`,
+      ``,
+      `System information as of ${new Date().toLocaleString()}:`,
+      ``,
+      `  System load:  0.08              Processes:             142`,
+      `  Usage of /:   23.4% of 49.16GB  Users logged in:       1`,
+      `  Memory usage: 34%               IPv4 address for eth0: 172.16.47.23`,
+      ``,
+      ``
+    ])
   }
 
   // Show login screen if not logged in
   if (!isLoggedIn) {
     return <NinerNetLogin onLogin={handleLogin} />
+  }
+
+  // Show terminal-only screen after login
+  if (showTerminalOnly) {
+    return (
+      <div className="w-screen h-screen bg-black text-green-400 font-mono p-8 overflow-auto">
+        <div className="max-w-5xl">
+          {terminalHistory.map((line, i) => (
+            <div key={i} className="whitespace-pre" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+              {line}
+            </div>
+          ))}
+          <div className="flex items-center mt-1">
+            <span className="text-green-500">[{currentUser}@lab-node-47]$</span>
+            <input
+              type="text"
+              value={terminalInput}
+              onChange={(e) => setTerminalInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleTerminalOnlyCommand(terminalInput)
+                  setTerminalInput("")
+                }
+              }}
+              className="flex-1 ml-2 bg-transparent border-none outline-none text-green-400"
+              style={{ fontSize: '14px' }}
+              autoFocus
+              spellCheck={false}
+            />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return showIntro ? (

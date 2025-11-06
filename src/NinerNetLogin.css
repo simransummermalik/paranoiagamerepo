@@ -1,323 +1,280 @@
-.ninernet-login-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.uncc-auth-page {
+  min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  z-index: 9999;
-}
-
-.ninernet-background-pattern {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image:
-    linear-gradient(rgba(0, 112, 60, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 112, 60, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ninernet-login-box {
-  position: relative;
-  z-index: 1;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
   background: white;
-  border-radius: 12px;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.07),
-    0 10px 25px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 440px;
-  overflow: hidden;
 }
 
-/* UNCC Header */
-.ninernet-header {
-  background: linear-gradient(135deg, #00703C 0%, #005830 100%);
-  padding: 32px 24px 28px;
+/* Top Green Banner */
+.uncc-top-banner {
+  background: linear-gradient(180deg, #00703C 0%, #005A30 100%);
   color: white;
+  padding: 20px 40px;
 }
 
-.uncc-logo-section {
+.uncc-banner-content {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.uncc-logo {
-  width: 60px;
-  height: 60px;
+.uncc-banner-logo {
+  width: 48px;
+  height: 48px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-.uncc-text h1 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.ninernet-subtitle {
-  margin: 4px 0 0 0;
-  font-size: 14px;
-  opacity: 0.9;
-  font-weight: 400;
-}
-
-/* Form Container */
-.ninernet-form-container {
-  padding: 32px 32px 24px;
-}
-
-.ninernet-form-title {
-  margin: 0 0 8px 0;
+.uncc-banner-text {
   font-size: 28px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
-.ninernet-form-subtitle {
-  margin: 0 0 24px 0;
-  font-size: 14px;
-  color: #666;
+.uncc-banner-title {
+  font-size: 32px;
+  font-weight: normal;
+  margin: 0;
+  padding-left: 4px;
 }
 
-.ninernet-form {
+/* Main Container */
+.uncc-main-container {
+  flex: 1;
+  display: flex;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Side - Campus Image */
+.uncc-image-side {
+  flex: 1;
+  min-width: 400px;
+  background: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+}
+
+.campus-image {
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/unccgame.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Right Side - Login Form */
+.uncc-form-side {
+  flex: 0 0 550px;
+  padding: 60px 80px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  background: white;
 }
 
-/* Input Groups */
-.ninernet-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.uncc-form-content {
+  width: 100%;
 }
 
-.ninernet-input-group label {
-  font-size: 14px;
-  font-weight: 500;
+.form-header,
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
   color: #333;
+  margin-bottom: 8px;
 }
 
-.ninernet-input {
-  padding: 12px 14px;
-  border: 2px solid #d1d5db;
-  border-radius: 6px;
+.info-icon {
+  display: inline-block;
+  margin-left: 6px;
+  color: #0066CC;
+  cursor: help;
+  font-size: 14px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.uncc-form-input {
+  width: 100%;
+  padding: 12px 45px 12px 12px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
   font-size: 15px;
-  transition: all 0.2s;
-  font-family: inherit;
+  font-family: Arial, sans-serif;
+  transition: border-color 0.2s;
 }
 
-.ninernet-input:focus {
+.uncc-form-input:focus {
   outline: none;
   border-color: #00703C;
-  box-shadow: 0 0 0 3px rgba(0, 112, 60, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 112, 60, 0.1);
 }
 
-.ninernet-input::placeholder {
-  color: #9ca3af;
-}
-
-/* Password Input */
-.password-input-wrapper {
-  position: relative;
-}
-
-.password-input-wrapper .ninernet-input {
-  padding-right: 45px;
-}
-
-.password-toggle {
+.input-icons {
   position: absolute;
   right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.duo-icon {
   font-size: 18px;
-  padding: 4px;
   opacity: 0.6;
-  transition: opacity 0.2s;
 }
 
-.password-toggle:hover {
-  opacity: 1;
-}
-
-/* Options Row */
-.ninernet-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  margin-top: -8px;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: #4b5563;
-}
-
-.remember-me input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  accent-color: #00703C;
-}
-
-.forgot-password {
-  color: #00703C;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.forgot-password:hover {
-  color: #005830;
-  text-decoration: underline;
-}
-
-/* Submit Button */
-.ninernet-submit-btn {
-  background: linear-gradient(135deg, #00703C 0%, #005830 100%);
-  color: white;
-  border: none;
+.uncc-login-button {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(180deg, #F4D03F 0%, #E8C000 100%);
+  border: 1px solid #C9A000;
   border-radius: 6px;
-  padding: 14px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
+  color: #333;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 112, 60, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 12px;
 }
 
-.ninernet-submit-btn:hover:not(:disabled) {
+.uncc-login-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #F5D95F 0%, #EAC520 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 112, 60, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
-.ninernet-submit-btn:active:not(:disabled) {
+.uncc-login-button:active:not(:disabled) {
   transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.ninernet-submit-btn:disabled {
+.uncc-login-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.loading-spinner {
-  display: inline-block;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-/* Footer */
-.ninernet-footer {
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-  text-align: center;
-}
-
-.footer-links {
+.form-links {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
 }
 
-.footer-links a {
-  color: #00703C;
+.form-link {
+  color: #0066CC;
   text-decoration: none;
+  font-size: 14px;
   transition: color 0.2s;
 }
 
-.footer-links a:hover {
-  color: #005830;
+.form-link:hover {
+  color: #004A99;
   text-decoration: underline;
 }
 
-.divider {
-  color: #d1d5db;
+.form-notice {
+  margin-top: 32px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-left: 3px solid #00703C;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555;
 }
 
-.security-notice {
-  font-size: 12px;
-  color: #6b7280;
+.form-notice a {
+  color: #0066CC;
+  text-decoration: underline;
+}
+
+.form-notice a:hover {
+  color: #004A99;
+}
+
+/* Bottom Green Banner */
+.uncc-bottom-banner {
+  background: linear-gradient(180deg, #00703C 0%, #005A30 100%);
+  color: white;
+  padding: 16px 40px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.uncc-bottom-banner p {
   margin: 0;
-  line-height: 1.5;
 }
 
-/* Bottom Info */
-.ninernet-bottom-info {
-  background: #f9fafb;
-  padding: 20px 32px;
+/* Footer */
+.uncc-footer {
+  background: white;
+  padding: 12px;
   text-align: center;
   font-size: 12px;
-  color: #6b7280;
-  border-top: 1px solid #e5e7eb;
+  color: #666;
+  border-top: 1px solid #e0e0e0;
 }
 
-.ninernet-bottom-info p {
-  margin: 4px 0;
-}
-
-.ninernet-bottom-info strong {
-  color: #374151;
-}
-
-.ninernet-version {
-  margin-top: 12px;
-  font-size: 11px;
-  color: #9ca3af;
+.uncc-footer p {
+  margin: 0;
 }
 
 /* Responsive */
-@media (max-width: 480px) {
-  .ninernet-login-box {
-    width: 95%;
+@media (max-width: 1024px) {
+  .uncc-main-container {
+    flex-direction: column;
   }
 
-  .ninernet-form-container,
-  .ninernet-bottom-info {
-    padding-left: 24px;
-    padding-right: 24px;
+  .uncc-image-side {
+    min-width: unset;
+    height: 300px;
   }
 
-  .ninernet-header {
-    padding: 24px 20px;
+  .uncc-form-side {
+    flex: 1;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .uncc-top-banner {
+    padding: 16px 20px;
   }
 
-  .uncc-logo {
-    width: 50px;
-    height: 50px;
-  }
-
-  .uncc-text h1 {
-    font-size: 20px;
-  }
-
-  .ninernet-form-title {
+  .uncc-banner-title {
     font-size: 24px;
+  }
+
+  .uncc-form-side {
+    padding: 30px 20px;
+  }
+
+  .uncc-bottom-banner {
+    padding: 12px 20px;
+    font-size: 12px;
   }
 }
