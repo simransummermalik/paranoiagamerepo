@@ -1,0 +1,323 @@
+.ninernet-login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  z-index: 9999;
+}
+
+.ninernet-background-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(0, 112, 60, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 112, 60, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ninernet-login-box {
+  position: relative;
+  z-index: 1;
+  background: white;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.07),
+    0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 440px;
+  overflow: hidden;
+}
+
+/* UNCC Header */
+.ninernet-header {
+  background: linear-gradient(135deg, #00703C 0%, #005830 100%);
+  padding: 32px 24px 28px;
+  color: white;
+}
+
+.uncc-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.uncc-logo {
+  width: 60px;
+  height: 60px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.uncc-text h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.ninernet-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+/* Form Container */
+.ninernet-form-container {
+  padding: 32px 32px 24px;
+}
+
+.ninernet-form-title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.ninernet-form-subtitle {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.ninernet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Input Groups */
+.ninernet-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ninernet-input-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.ninernet-input {
+  padding: 12px 14px;
+  border: 2px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 15px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.ninernet-input:focus {
+  outline: none;
+  border-color: #00703C;
+  box-shadow: 0 0 0 3px rgba(0, 112, 60, 0.1);
+}
+
+.ninernet-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Password Input */
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper .ninernet-input {
+  padding-right: 45px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.password-toggle:hover {
+  opacity: 1;
+}
+
+/* Options Row */
+.ninernet-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-top: -8px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #00703C;
+}
+
+.forgot-password {
+  color: #00703C;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-password:hover {
+  color: #005830;
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.ninernet-submit-btn {
+  background: linear-gradient(135deg, #00703C 0%, #005830 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 112, 60, 0.2);
+}
+
+.ninernet-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 112, 60, 0.3);
+}
+
+.ninernet-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ninernet-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Footer */
+.ninernet-footer {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.footer-links a {
+  color: #00703C;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: #005830;
+  text-decoration: underline;
+}
+
+.divider {
+  color: #d1d5db;
+}
+
+.security-notice {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Bottom Info */
+.ninernet-bottom-info {
+  background: #f9fafb;
+  padding: 20px 32px;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ninernet-bottom-info p {
+  margin: 4px 0;
+}
+
+.ninernet-bottom-info strong {
+  color: #374151;
+}
+
+.ninernet-version {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .ninernet-login-box {
+    width: 95%;
+  }
+
+  .ninernet-form-container,
+  .ninernet-bottom-info {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .ninernet-header {
+    padding: 24px 20px;
+  }
+
+  .uncc-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .uncc-text h1 {
+    font-size: 20px;
+  }
+
+  .ninernet-form-title {
+    font-size: 24px;
+  }
+}

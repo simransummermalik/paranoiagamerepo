@@ -12,17 +12,27 @@ export class StoryEngine {
       observerContaminated: false,
     }
 
+    // Subtle environmental changes instead of obvious milestones
     this.investigationMilestones = {
-      5: "Network anomalies detected in system logs",
-      15: "Unauthorized processes running in background",
-      25: "System timestamps show inconsistencies spanning decades",
-      35: "Node signature doesn't match any known university hardware",
-      45: "Encrypted metadata contains DARPA classification markers",
-      55: "Neural Media Influence Initiative - archived project files found",
-      65: "Previous observer sessions logged - students reported missing",
-      75: "System has been actively monitoring and profiling users",
-      85: "You are not investigating a system. You are being studied.",
-      95: "Welcome to the experiment. You always were the subject.",
+      5: null, // Minor UI timing shifts start
+      15: null, // Timestamps begin drifting
+      25: null, // Color temperature shifts
+      35: null, // Background processes multiply
+      45: null, // Content inconsistencies appear
+      55: null, // Temporal anomalies intensify
+      65: null, // Reality anchors weaken
+      75: null, // Observer effect manifests
+      85: null, // Narrative coherence breaks
+      95: null, // Complete environmental corruption
+    }
+
+    // Environmental corruption levels
+    this.environmentalEffects = {
+      uiGlitchIntensity: 0,
+      timestampDrift: 0,
+      colorCorruption: 0,
+      contentInstability: 0,
+      temporalAnomalies: 0,
     }
 
     this.phaseDescriptions = {
@@ -78,13 +88,39 @@ export class StoryEngine {
   advanceInvestigation(amount) {
     this.storyState.investigationDepth = Math.min(100, this.storyState.investigationDepth + amount)
 
-    // Trigger reality breaches at certain thresholds
-    if (this.storyState.investigationDepth >= 50 && !this.storyState.timelineCorrupted) {
+    // Gradually increase environmental corruption
+    const depth = this.storyState.investigationDepth
+
+    // UI glitches intensify slowly
+    this.environmentalEffects.uiGlitchIntensity = Math.min(100, depth * 0.8)
+
+    // Timestamps start drifting after 15% investigation
+    if (depth >= 15) {
+      this.environmentalEffects.timestampDrift = Math.min(100, (depth - 15) * 1.2)
+    }
+
+    // Color temperature shifts after 25%
+    if (depth >= 25) {
+      this.environmentalEffects.colorCorruption = Math.min(100, (depth - 25) * 1.1)
+    }
+
+    // Content becomes unstable after 45%
+    if (depth >= 45) {
+      this.environmentalEffects.contentInstability = Math.min(100, (depth - 45) * 1.5)
+    }
+
+    // Temporal anomalies after 55%
+    if (depth >= 55) {
+      this.environmentalEffects.temporalAnomalies = Math.min(100, (depth - 55) * 1.8)
+    }
+
+    // Silent reality breaches (no notifications, just effects)
+    if (depth >= 50 && !this.storyState.timelineCorrupted) {
       this.storyState.timelineCorrupted = true
       this.storyState.realityBreaches++
     }
 
-    if (this.storyState.investigationDepth >= 75 && !this.storyState.observerContaminated) {
+    if (depth >= 75 && !this.storyState.observerContaminated) {
       this.storyState.observerContaminated = true
       this.storyState.realityBreaches++
     }
@@ -121,21 +157,39 @@ export class StoryEngine {
   }
 
   getLatestMilestone() {
-    const depth = this.storyState.investigationDepth
-    const milestoneKeys = Object.keys(this.investigationMilestones)
-      .map(Number)
-      .sort((a, b) => b - a)
-
-    for (const threshold of milestoneKeys) {
-      if (depth >= threshold) {
-        const milestone = this.investigationMilestones[threshold]
-        if (milestone !== this.lastMilestone) {
-          this.lastMilestone = milestone
-          return milestone
-        }
-      }
-    }
+    // No more explicit milestones - everything happens through environmental effects
     return null
+  }
+
+  getEnvironmentalEffects() {
+    return { ...this.environmentalEffects }
+  }
+
+  getTimestampDrift() {
+    // Returns minutes to drift timestamps (can be negative for backwards drift)
+    const drift = this.environmentalEffects.timestampDrift
+    if (drift < 20) return 0
+    if (drift < 40) return Math.floor(Math.random() * 10) - 5 // -5 to +5 minutes
+    if (drift < 60) return Math.floor(Math.random() * 120) - 60 // -60 to +60 minutes
+    return Math.floor(Math.random() * 1440) - 720 // -12 to +12 hours
+  }
+
+  getColorFilter() {
+    const corruption = this.environmentalEffects.colorCorruption
+    if (corruption < 20) return null
+    if (corruption < 40) return `hue-rotate(${corruption * 0.5}deg)`
+    if (corruption < 60) return `hue-rotate(${corruption}deg) saturate(${120 - corruption}%)`
+    return `hue-rotate(${corruption * 1.5}deg) saturate(${150 - corruption}%) contrast(${100 + corruption * 0.3}%)`
+  }
+
+  shouldGlitch() {
+    const intensity = this.environmentalEffects.uiGlitchIntensity
+    return Math.random() * 100 < intensity
+  }
+
+  getContentCorruption() {
+    // Returns probability (0-100) that content should be altered
+    return this.environmentalEffects.contentInstability
   }
 
   getPhaseDescription() {

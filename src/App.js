@@ -18,8 +18,11 @@ import FaceTracker from "./FaceTracker"
 import BehaviorTracker from "./behaviorTracker"
 import { StoryEngine } from "./storyEngine"
 import RedditForum from "./RedditForum"
+import NinerNetLogin from "./NinerNetLogin"
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
   const [showTrustPrompt, setShowTrustPrompt] = useState(false)
   const [pendingFile, setPendingFile] = useState(null)
   const [showIntro, setShowIntro] = useState(true)
@@ -76,26 +79,23 @@ function App() {
 
   // Random creepy notifications
   useEffect(() => {
-    const creepyNotifications = [
-      { message: "⚠ Unusual activity detected", type: "warning" },
-      { message: "📊 Your session is being recorded", type: "info" },
-      { message: "🔒 Security protocol activated", type: "warning" },
-      { message: "👁 Someone is monitoring this node", type: "error" },
-      { message: "⏰ System time adjusted: -3 minutes", type: "warning" },
-      { message: "🔄 Timeline integrity check failed", type: "error" },
-      { message: "📡 Uploading session data to mirror.node...", type: "info" },
-      { message: "🧠 Behavioral analysis: 87% complete", type: "info" },
-      { message: "⚡ Memory corruption detected in sector 7", type: "error" },
-      { message: "👤 Another observer connected to this node", type: "warning" },
+    // Subtle system notifications - seem normal but build dread over time
+    const subtleNotifications = [
+      { message: "Background sync complete", type: "info" },
+      { message: "Cache refreshed", type: "info" },
+      { message: "Network connection stable", type: "info" },
+      { message: "System update available", type: "info" },
+      { message: "Session data saved", type: "info" },
     ]
 
     const interval = setInterval(() => {
       const investigationDepth = storyEngine.getInvestigationProgress()
-      if (investigationDepth > 20 && Math.random() > 0.7) {
-        const randomNotif = creepyNotifications[Math.floor(Math.random() * creepyNotifications.length)]
-        showNotification(randomNotif.message, randomNotif.type, 6000)
+      // Only show very occasional notifications, less intrusive
+      if (investigationDepth > 40 && Math.random() > 0.92) {
+        const randomNotif = subtleNotifications[Math.floor(Math.random() * subtleNotifications.length)]
+        showNotification(randomNotif.message, randomNotif.type, 3000)
       }
-    }, 15000) // Every 15 seconds
+    }, 25000) // Every 25 seconds, less frequent
 
     return () => clearInterval(interval)
   }, [storyEngine])
@@ -504,6 +504,19 @@ Current Articles: ${currentArticles}
     setTerminalInput("")
   }
 
+  // Handle login
+  const handleLogin = (username) => {
+    setCurrentUser(username)
+    setIsLoggedIn(true)
+    behaviorTracker.trackSiteVisit('ninernet_login')
+    storyEngine.advanceInvestigation(1) // Subtle start - just 1%
+  }
+
+  // Show login screen if not logged in
+  if (!isLoggedIn) {
+    return <NinerNetLogin onLogin={handleLogin} />
+  }
+
   return showIntro ? (
     <IntroOverlay onFinish={() => setShowIntro(false)} />
   ) : (
@@ -521,19 +534,8 @@ Current Articles: ${currentArticles}
         </div>
       )}
 
-      {/* Investigation milestone popup */}
-      {investigationMilestones.length > 0 && (
-        <div className="absolute top-16 left-4 bg-blue-600 text-white px-4 py-2 rounded shadow-md z-50 text-sm font-mono max-w-md">
-          🔍 {investigationMilestones[investigationMilestones.length - 1]}
-        </div>
-      )}
-
-      {/* Viral article popup */}
-      {viralArticles.length > 0 && (
-        <div className="absolute top-16 right-4 bg-yellow-600 text-black px-4 py-2 rounded shadow-md z-50 text-sm font-mono">
-          🚨 CAMPUS ALERT: Security Incident Reported
-        </div>
-      )}
+      {/* Investigation milestone popup - REMOVED for subtlety */}
+      {/* Viral article popup - REMOVED for subtlety */}
 
       {/* NOTIFICATIONS */}
       <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
@@ -1001,7 +1003,7 @@ Current Articles: ${currentArticles}
 
             if (post.flair === "Research" || post.content.includes("DARPA")) {
               storyEngine.advanceInvestigation(8);
-              showNotification("📁 DARPA connection documented in system logs", "info", 4000);
+              // Removed notification - progression happens silently
               const profile = behaviorTracker.getProfile();
               const response = storyEngine.processUserAction(
                 { type: "forum_discovery", discovery: "darpa_files" },
@@ -1013,7 +1015,7 @@ Current Articles: ${currentArticles}
             }
 
             if (post.isYours) {
-              showNotification("⚠ Timeline anomaly: Post authored by your account before login", "warning", 6000);
+              // Timeline anomaly - no notification, just silent progression
               storyEngine.advanceInvestigation(6);
               const profile = behaviorTracker.getProfile();
               storyEngine.processUserAction(
@@ -1024,7 +1026,7 @@ Current Articles: ${currentArticles}
 
             if (post.author === "u/[deleted]") {
               storyEngine.advanceInvestigation(3);
-              showNotification("🔍 Deleted post metadata recovered", "info", 3000);
+              // Removed notification - let it happen naturally
             }
           }}
         />
@@ -1100,13 +1102,12 @@ Current Articles: ${currentArticles}
         </div>
 
         <div className="taskbar-system">
-          <div className="flex items-center gap-2">
-            <span className="text-yellow-400">⚠</span>
-            <span style={{ fontSize: '11px' }}>Risk: {behaviorTracker.getProfile().riskLevel}</span>
+          <div style={{ fontSize: '11px' }}>
+            {currentUser || "User"}
           </div>
           <div className="text-gray-400">|</div>
           <div style={{ fontSize: '11px' }}>
-            {storyEngine.getPhaseDescription()}
+            System Status: Normal
           </div>
           <div className="text-gray-400">|</div>
           <div style={{ fontSize: '11px' }}>

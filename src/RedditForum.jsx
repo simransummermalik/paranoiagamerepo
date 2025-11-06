@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import "./RedditForum.css";
 
-export default function RedditForum({ onClose, investigationDepth, onPostClick, userBehavior }) {
+export default function RedditForum({ onClose, investigationDepth, onPostClick, userBehavior, storyEngine }) {
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("new");
   const [clickedPosts, setClickedPosts] = useState([]);
   const [view, setView] = useState("home"); // 'home' or 'subreddit'
+  const [glitchActive, setGlitchActive] = useState(false);
 
   // Generate realistic timestamps relative to now
   const generateTimestamp = (minutesAgo) => {
