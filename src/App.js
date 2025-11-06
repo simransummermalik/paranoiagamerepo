@@ -18,6 +18,7 @@ import FaceTracker from "./FaceTracker"
 import BehaviorTracker from "./behaviorTracker"
 import { StoryEngine } from "./storyEngine"
 import RedditForum from "./RedditForum"
+import InteractiveRedditForum from "./InteractiveRedditForum"
 import NinerNetLogin from "./NinerNetLogin"
 
 function App() {
@@ -1130,6 +1131,8 @@ Current Articles: ${currentArticles}
           onClose={() => setShowRedditForum(false)}
           investigationDepth={storyEngine.getInvestigationProgress()}
           userBehavior={behaviorTracker.getProfile()}
+          currentUser={currentUser}
+          storyEngine={storyEngine}
           onPostClick={(post) => {
             // Track forum engagement using the appropriate method
             // BehaviorTracker doesn't have a trackAction method, so we'll track this as a site visit

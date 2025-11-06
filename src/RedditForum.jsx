@@ -1,12 +1,106 @@
 import { useState, useEffect } from "react";
 import "./RedditForum.css";
+import { generateRedditReply } from "./openaiService";
 
-export default function RedditForum({ onClose, investigationDepth, onPostClick, userBehavior, storyEngine }) {
+export default function RedditForum({ onClose, investigationDepth, onPostClick, userBehavior, storyEngine, currentUser }) {
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("new");
   const [clickedPosts, setClickedPosts] = useState([]);
   const [view, setView] = useState("home"); // 'home' or 'subreddit'
   const [glitchActive, setGlitchActive] = useState(false);
+  const [commentText, setCommentText] = useState({});
+  const [isPostingComment, setIsPostingComment] = useState(false);
+
+  // Check if comment contains inappropriate content
+  const isInappropriate = (text) => {
+    const badWords = ['fuck', 'shit', 'damn', 'hell', 'ass', 'bitch', 'kill', 'die', 'idiot', 'stupid', 'dumb'];
+    const lowerText = text.toLowerCase();
+    return badWords.some(word => lowerText.includes(word));
+  };
+
+  // Handle posting a comment
+  const handlePostComment = async (postId) => {
+    const text = commentText[postId];
+    if (!text || !text.trim() || isPostingComment) return;
+
+    setIsPostingComment(true);
+
+    // Add user's comment
+    const userComment = {
+      author: `u/${currentUser || 'user'}`,
+      timestamp: 'just now',
+      content: text,
+      upvotes: 1
+    };
+
+    // Update posts with user comment
+    setPosts(prev => prev.map(p => {
+      if (p.id === postId) {
+        return { ...p, replies: [...(p.replies || []), userComment] };
+      }
+      return p;
+    }));
+
+    setCommentText(prev => ({ ...prev, [postId]: '' }));
+
+    // Check for inappropriate content
+    if (isInappropriate(text)) {
+      // Add automod message after 2-3 seconds
+      setTimeout(() => {
+        const automodMessage = {
+          author: 'u/AutoModerator',
+          timestamp: 'just now',
+          content: '[removed] - Your comment has been automatically removed for violating community guidelines. Please review our rules and maintain respectful discourse.',
+          upvotes: 1,
+          isAutomod: true
+        };
+
+        setPosts(prev => prev.map(p => {
+          if (p.id === postId) {
+            return { ...p, replies: [...(p.replies || []), automodMessage] };
+          }
+          return p;
+        }));
+      }, 2000 + Math.random() * 1000);
+
+      setIsPostingComment(false);
+      return;
+    }
+
+    // Generate AI response after 20-30 seconds
+    const delay = 20000 + Math.random() * 10000; // 20-30 seconds
+    setTimeout(async () => {
+      try {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+
+        const aiReply = await generateRedditReply(
+          post.title + " " + (post.content || ''),
+          text,
+          currentUser || 'user',
+          investigationDepth
+        );
+
+        const aiComment = {
+          author: investigationDepth > 60 ? 'u/[deleted]' : `u/redditor_${Math.floor(Math.random() * 9999)}`,
+          timestamp: 'just now',
+          content: aiReply,
+          upvotes: Math.floor(Math.random() * 50) + 1
+        };
+
+        setPosts(prev => prev.map(p => {
+          if (p.id === postId) {
+            return { ...p, replies: [...(p.replies || []), aiComment] };
+          }
+          return p;
+        }));
+      } catch (error) {
+        console.error('Failed to generate AI response:', error);
+      } finally {
+        setIsPostingComment(false);
+      }
+    }, delay);
+  };
 
   // Generate realistic timestamps relative to now
   const generateTimestamp = (minutesAgo) => {
@@ -421,11 +515,33 @@ export default function RedditForum({ onClose, investigationDepth, onPostClick, 
                   {post.isYours && <button className="action-btn delete">🗑️ Delete</button>}
                 </div>
 
+                {/* Comment Input Box */}
+                {expandedPosts.includes(post.id) && (
+                  <div className="comment-input-box">
+                    <textarea
+                      placeholder={`Comment as u/${currentUser || 'user'}`}
+                      value={commentText[post.id] || ''}
+                      onChange={(e) => setCommentText(prev => ({ ...prev, [post.id]: e.target.value }))}
+                      rows={3}
+                      className="comment-textarea"
+                    />
+                    <div className="comment-input-actions">
+                      <button
+                        className="comment-submit-btn"
+                        onClick={() => handlePostComment(post.id)}
+                        disabled={!commentText[post.id]?.trim() || isPostingComment}
+                      >
+                        {isPostingComment ? 'Posting...' : 'Comment'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Comments */}
                 {expandedPosts.includes(post.id) && post.replies && (
                   <div className="post-comments">
                     {post.replies.map((reply, idx) => (
-                      <div key={idx} className="comment">
+                      <div key={idx} className={`comment ${reply.isAutomod ? 'automod' : ''}`}>
                         <div className="comment-vote">
                           <button>▲</button>
                           <span>{reply.upvotes}</span>
@@ -433,7 +549,10 @@ export default function RedditForum({ onClose, investigationDepth, onPostClick, 
                         </div>
                         <div className="comment-content">
                           <div className="comment-header">
-                            <span className="comment-author">{reply.author}</span>
+                            <span className={`comment-author ${reply.isAutomod ? 'automod-badge' : ''}`}>
+                              {reply.author}
+                              {reply.isAutomod && <span className="mod-badge">MOD</span>}
+                            </span>
                             <span className="comment-time">{reply.timestamp}</span>
                           </div>
                           <p className="comment-body">{reply.content}</p>
