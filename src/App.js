@@ -1060,63 +1060,69 @@ Current Articles: ${currentArticles}
           </div>
 
           {/* Browser Content */}
-          <div className="browser-content" style={{ height: 'calc(100% - 88px)' }}>
-            <div className="article-content">
-              {/* Site Header */}
-              <div style={{ borderBottom: '2px solid #e0e0e0', paddingBottom: '16px', marginBottom: '32px' }}>
-                <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1a1a1a' }}>{page.title}</h1>
-                <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{page.description}</p>
-              </div>
+          <div className="browser-content" style={{ height: 'calc(100% - 88px)', overflow: 'auto' }}>
+            {page.renderHTML ? (
+              // Render custom HTML for realistic sites
+              <div dangerouslySetInnerHTML={{ __html: page.renderHTML(rewriteLevel) }} />
+            ) : (
+              // Fallback to original article rendering
+              <div className="article-content">
+                {/* Site Header */}
+                <div style={{ borderBottom: '2px solid #e0e0e0', paddingBottom: '16px', marginBottom: '32px' }}>
+                  <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1a1a1a' }}>{page.title}</h1>
+                  <p style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{page.description}</p>
+                </div>
 
-              {/* Articles */}
-              {siteContent.map((article, i) => (
-                <div key={i} className="article-header" style={{ marginBottom: '40px' }}>
-                  <h2 className="article-title">{article.title}</h2>
-                  <div className="article-meta">
-                    <span>📅 {new Date().toLocaleDateString()}</span>
-                    <span>👤 Anonymous</span>
-                    <span>🕐 {Math.floor(Math.random() * 10 + 2)} min read</span>
+                {/* Articles */}
+                {siteContent.map((article, i) => (
+                  <div key={i} className="article-header" style={{ marginBottom: '40px' }}>
+                    <h2 className="article-title">{article.title}</h2>
+                    <div className="article-meta">
+                      <span>📅 {new Date().toLocaleDateString()}</span>
+                      <span>👤 Anonymous</span>
+                      <span>🕐 {Math.floor(Math.random() * 10 + 2)} min read</span>
+                    </div>
+                    <div className="article-body" style={{ marginTop: '20px' }}>
+                      <p>{article.content}</p>
+                      {rewriteLevel > 0 && (
+                        <p style={{ color: '#dc2626', fontStyle: 'italic', fontSize: '14px', marginTop: '12px' }}>
+                          [Article updated {rewriteLevel} time{rewriteLevel > 1 ? 's' : ''}]
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="article-body" style={{ marginTop: '20px' }}>
-                    <p>{article.content}</p>
-                    {rewriteLevel > 0 && (
-                      <p style={{ color: '#dc2626', fontStyle: 'italic', fontSize: '14px', marginTop: '12px' }}>
-                        [Article updated {rewriteLevel} time{rewriteLevel > 1 ? 's' : ''}]
+                ))}
+
+                {/* Show viral articles */}
+                {viralArticles.map((article, i) => (
+                  <div
+                    key={`viral-${i}`}
+                    style={{
+                      border: '2px solid #eab308',
+                      padding: '20px',
+                      borderRadius: '8px',
+                      background: '#fef3c7',
+                      marginBottom: '24px',
+                    }}
+                  >
+                    <div style={{ background: '#eab308', color: 'white', padding: '4px 8px', borderRadius: '4px', display: 'inline-block', fontSize: '11px', fontWeight: '600', marginBottom: '12px' }}>
+                      ⚠️ BREAKING NEWS
+                    </div>
+                    <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1a1a1a', marginBottom: '12px' }}>
+                      {article.headline}
+                    </h2>
+                    <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#333', marginBottom: '12px' }}>
+                      {article.content}
+                    </p>
+                    {article.escalation && (
+                      <p style={{ color: '#dc2626', fontSize: '14px', fontWeight: '500' }}>
+                        {article.escalation}
                       </p>
                     )}
                   </div>
-                </div>
-              ))}
-
-              {/* Show viral articles */}
-              {viralArticles.map((article, i) => (
-                <div
-                  key={`viral-${i}`}
-                  style={{
-                    border: '2px solid #eab308',
-                    padding: '20px',
-                    borderRadius: '8px',
-                    background: '#fef3c7',
-                    marginBottom: '24px',
-                  }}
-                >
-                  <div style={{ background: '#eab308', color: 'white', padding: '4px 8px', borderRadius: '4px', display: 'inline-block', fontSize: '11px', fontWeight: '600', marginBottom: '12px' }}>
-                    ⚠️ BREAKING NEWS
-                  </div>
-                  <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1a1a1a', marginBottom: '12px' }}>
-                    {article.headline}
-                  </h2>
-                  <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#333', marginBottom: '12px' }}>
-                    {article.content}
-                  </p>
-                  {article.escalation && (
-                    <p style={{ color: '#dc2626', fontSize: '14px', fontWeight: '500' }}>
-                      {article.escalation}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
           </div>
         </Draggable>
