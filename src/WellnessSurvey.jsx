@@ -76,29 +76,31 @@ export default function WellnessSurvey({ onComplete, investigationDepth }) {
   if (showCompletion) {
     return (
       <div className="wellness-survey">
-        <div className="survey-completion">
-          <div className="completion-icon">
-            {investigationDepth > 50 ? "⚠️" : "✓"}
-          </div>
-          <h2>
-            {investigationDepth > 60
-              ? "Response Recorded and Analyzed"
-              : investigationDepth > 40
-              ? "Thank You for Your Participation"
-              : "Survey Complete"}
-          </h2>
-          <p>
-            {investigationDepth > 60
-              ? "Your behavioral markers have been updated. Protocol adjustments in progress."
-              : investigationDepth > 40
-              ? "Your responses will be reviewed by our wellness team within 24-48 hours."
-              : "Thank you for taking the time to complete this wellness check."}
-          </p>
-          {investigationDepth > 50 && (
-            <div className="completion-warning">
-              Anomalous response patterns detected. Follow-up required.
+        <div className="survey-container">
+          <div className="survey-completion">
+            <div className="completion-icon">
+              {investigationDepth > 50 ? "⚠️" : "✓"}
             </div>
-          )}
+            <h2>
+              {investigationDepth > 60
+                ? "Response Recorded and Analyzed"
+                : investigationDepth > 40
+                ? "Thank You for Your Participation"
+                : "Survey Complete"}
+            </h2>
+            <p>
+              {investigationDepth > 60
+                ? "Your behavioral markers have been updated. Protocol adjustments in progress."
+                : investigationDepth > 40
+                ? "Your responses will be reviewed by our wellness team within 24-48 hours."
+                : "Thank you for taking the time to complete this wellness check."}
+            </p>
+            {investigationDepth > 50 && (
+              <div className="completion-warning">
+                Anomalous response patterns detected. Follow-up required.
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -106,6 +108,7 @@ export default function WellnessSurvey({ onComplete, investigationDepth }) {
 
   return (
     <div className="wellness-survey">
+      <div className="survey-container">
       <div className="survey-header">
         <div className="survey-title">
           <svg width="32" height="32" viewBox="0 0 60 60" style={{ marginRight: "12px" }}>
@@ -181,6 +184,7 @@ export default function WellnessSurvey({ onComplete, investigationDepth }) {
             Declining to participate may affect your academic standing.
           </div>
         )}
+      </div>
       </div>
     </div>
   );
