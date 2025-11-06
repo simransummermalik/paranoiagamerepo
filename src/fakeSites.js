@@ -484,6 +484,615 @@ const fakeSites = {
         }
       </style>
     `
+  },
+
+  "cnn-news.com": {
+    title: "CNN News",
+    type: "mainstream_news",
+    renderHTML: (rewriteLevel) => `
+      <div style="font-family: 'CNN Sans', Arial, sans-serif; background: #fff; min-height: 100%;">
+        <!-- Header -->
+        <div style="background: #cc0000; color: white; padding: 8px 0;">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="font-size: 36px; font-weight: bold; letter-spacing: -2px;">CNN</div>
+                <div style="font-size: 12px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 15px;">
+                  ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+              </div>
+              <div style="font-size: 11px; opacity: 0.9;">BREAKING NEWS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div style="background: #000; color: white; padding: 12px 0; border-bottom: 2px solid #cc0000;">
+          <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; gap: 25px; font-size: 13px; font-weight: 600;">
+            <a href="#" style="color: white; text-decoration: none;">U.S.</a>
+            <a href="#" style="color: white; text-decoration: none;">World</a>
+            <a href="#" style="color: white; text-decoration: none;">Politics</a>
+            <a href="#" style="color: white; text-decoration: none;">Business</a>
+            <a href="#" style="color: white; text-decoration: none;">Tech</a>
+            <a href="#" style="color: white; text-decoration: none;">Science</a>
+          </div>
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; padding: 30px 20px;">
+          ${rewriteLevel >= 2 ? `
+          <div style="background: #ffe6e6; border-left: 4px solid #cc0000; padding: 15px 20px; margin-bottom: 30px;">
+            <div style="color: #cc0000; font-weight: bold; font-size: 14px; margin-bottom: 5px;">EDITOR'S NOTE</div>
+            <div style="font-size: 13px; color: #333;">Multiple sources reporting inconsistencies in archived news footage. Timestamps across broadcasts showing temporal discrepancies. Investigation ongoing.</div>
+          </div>
+          ` : ''}
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            <!-- Main story -->
+            <div>
+              <div style="color: #cc0000; font-size: 11px; font-weight: bold; letter-spacing: 1px; margin-bottom: 8px;">BREAKING NEWS</div>
+              <h1 style="font-size: 42px; line-height: 1.1; margin: 0 0 15px 0; font-weight: 700; color: #000;">
+                ${rewriteLevel >= 2
+                  ? 'News Anchors Report Memory Gaps During Live Broadcasts'
+                  : rewriteLevel >= 1
+                    ? 'Technical Difficulties Plague Major News Networks'
+                    : 'Major Networks Upgrade Broadcast Technology'
+                }
+              </h1>
+              <div style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                By <span style="color: #cc0000;">CNN Digital Team</span> | Updated ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ET
+              </div>
+
+              <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800" style="width: 100%; height: 450px; object-fit: cover; margin-bottom: 20px; ${rewriteLevel >= 2 ? 'filter: hue-rotate(30deg) saturate(1.3);' : ''}" />
+
+              <div style="font-size: 18px; line-height: 1.8; color: #262626;">
+                <p style="margin: 0 0 20px 0; font-weight: 500;">
+                  ${rewriteLevel >= 2
+                    ? `(CNN) — In an unprecedented series of incidents, news anchors across multiple major networks have reported experiencing <b>gaps in their memory during live broadcasts</b>. The phenomenon, which has affected at least 14 journalists over the past week, has raised concerns about <span style="background: #ffe6e6; padding: 2px 4px;">the integrity of broadcast timelines</span>.`
+                    : rewriteLevel >= 1
+                      ? `(CNN) — Major news networks experienced widespread technical difficulties during prime-time broadcasts this week, with several anchors reporting unusual audio dropouts and timestamp errors in their teleprompter systems.`
+                      : `(CNN) — Major broadcasting networks announced a coordinated upgrade to their transmission infrastructure this week, promising viewers improved picture quality and more reliable live coverage.`
+                  }
+                </p>
+
+                <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.7;">
+                  ${rewriteLevel >= 2
+                    ? `"I looked at the clock and it said 7:42 PM," reported veteran anchor Marcus Chen. "Then I blinked and it was 7:58 PM. I have no memory of those sixteen minutes. <b style="color: #cc0000;">But the teleprompter shows I read the entire segment</b>."<br><br>
+
+                    Network engineers reviewing the footage found that <span style="background: #ffe6e6; padding: 2px 4px;">broadcast timestamps don't match studio clocks</span> during these incidents. Even more puzzling: <b>archived recordings show different content than what producers remember filming</b>.<br><br>
+
+                    "We're dealing with something unprecedented," said Dr. Rachel Kim, a media forensics expert. "The metadata indicates these broadcasts occurred exactly as recorded, but <span style="color: #cc0000; font-weight: 500;">multiple eyewitnesses remember different events</span>."<br><br>
+
+                    Federal communications regulators have launched an investigation into what they're calling <span style="background: #ffe6e6; padding: 2px 4px;">"temporal broadcast anomalies."</span>`
+                    : rewriteLevel >= 1
+                      ? `Network technicians are investigating the source of the disruptions, which primarily affected timestamp displays and audio synchronization. Several viewers reported that news segments appeared to "skip" during live broadcasts.<br><br>
+
+                      "We're working to identify the root cause," said a spokesperson for the broadcast engineers union. "Initial analysis suggests possible interference with our timing systems."<br><br>
+
+                      No official explanation has been provided for the coordinated nature of the technical issues.`
+                      : `The upgrades include state-of-the-art HD cameras, improved satellite uplinks, and redundant backup systems to prevent technical failures during breaking news coverage.<br><br>
+
+                      Industry experts say the improvements will significantly enhance viewers' experience and provide more reliable coverage of important events worldwide.`
+                  }
+                </p>
+
+                ${rewriteLevel >= 2 ? `
+                <div style="background: #f5f5f5; border-left: 3px solid #cc0000; padding: 15px; margin: 20px 0;">
+                  <div style="font-size: 12px; color: #666; margin-bottom: 8px;">VIEWER REPORTS</div>
+                  <div style="font-size: 14px; line-height: 1.6;">
+                    <p style="margin: 8px 0;">"I recorded the 7PM broadcast. When I played it back, <b>it showed completely different news stories</b> than what I watched live." - @viewer_42</p>
+                    <p style="margin: 8px 0;">"The timestamps keep jumping. I've noticed it for weeks but thought it was my cable box." - @newswatch_daily</p>
+                  </div>
+                </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+              <div style="background: #f5f5f5; padding: 20px; margin-bottom: 20px;">
+                <h3 style="font-size: 18px; margin: 0 0 15px 0; font-weight: bold; color: #000;">More Headlines</h3>
+                <div style="border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;">
+                  <a href="#" style="color: #000; text-decoration: none; font-size: 15px; line-height: 1.4; display: block;">Markets steady amid tech sector concerns</a>
+                </div>
+                <div style="border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;">
+                  <a href="#" style="color: #000; text-decoration: none; font-size: 15px; line-height: 1.4; display: block;">New climate report released</a>
+                </div>
+                ${rewriteLevel >= 2 ? `
+                <div style="border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;">
+                  <a href="#" style="color: #cc0000; text-decoration: none; font-size: 15px; line-height: 1.4; display: block; font-weight: 600;">⚠️ Broadcast anomalies reported nationwide</a>
+                </div>
+                ` : ''}
+                <div style="padding-bottom: 15px;">
+                  <a href="#" style="color: #000; text-decoration: none; font-size: 15px; line-height: 1.4; display: block;">Presidential address scheduled</a>
+                </div>
+              </div>
+
+              <div style="background: #000; color: white; padding: 20px; text-align: center;">
+                <div style="font-size: 20px; font-weight: bold; color: #cc0000; margin-bottom: 10px;">BREAKING</div>
+                <div style="font-size: 14px; line-height: 1.5;">
+                  ${rewriteLevel >= 2 ? 'FCC investigating temporal anomalies in broadcast systems' : 'Stay updated with CNN alerts'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background: #000; color: white; padding: 30px 20px; margin-top: 50px; text-align: center; font-size: 12px;">
+          <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="font-size: 24px; font-weight: bold; letter-spacing: -1px; margin-bottom: 20px; color: #cc0000;">CNN</div>
+            <div style="opacity: 0.7;">© ${new Date().getFullYear()} Cable News Network. All Rights Reserved.</div>
+            ${rewriteLevel >= 2 ? '<div style="opacity: 0.5; margin-top: 10px; font-size: 11px;">Timestamp verification: [ERROR]</div>' : ''}
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  "github-code.dev": {
+    title: "GitHub",
+    type: "code_repository",
+    renderHTML: (rewriteLevel) => `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100%;">
+        <!-- Header -->
+        <div style="background: #161b22; border-bottom: 1px solid #30363d; padding: 16px 32px;">
+          <div style="max-width: 1280px; margin: 0 auto; display: flex; align-items: center; gap: 16px;">
+            <svg height="32" width="32" viewBox="0 0 16 16" fill="#f0f6fc">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            <div style="font-size: 20px; font-weight: 600;">GitHub</div>
+            <input type="text" placeholder="Search repositories..." style="background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; padding: 5px 12px; border-radius: 6px; width: 300px; font-size: 14px;" />
+          </div>
+        </div>
+
+        <div style="max-width: 1280px; margin: 0 auto; padding: 24px 32px;">
+          ${rewriteLevel >= 2 ? `
+          <div style="background: #1c1300; border: 1px solid #9e6a03; border-radius: 6px; padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px;">
+              <div style="color: #f0ad4e; font-size: 20px;">⚠️</div>
+              <div>
+                <div style="color: #f0ad4e; font-weight: 600; font-size: 14px; margin-bottom: 4px;">Repository integrity warning</div>
+                <div style="font-size: 13px; color: #c9d1d9;">Commit timestamps show impossible sequences. Git history may be corrupted.</div>
+              </div>
+            </div>
+          </div>
+          ` : ''}
+
+          <!-- Repository header -->
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+              <a href="#" style="color: #58a6ff; text-decoration: none; font-size: 20px; font-weight: 600;">DARPA-Research</a>
+              <span style="color: #8b949e;">/</span>
+              <a href="#" style="color: #58a6ff; text-decoration: none; font-size: 20px; font-weight: 600;">behavioral-monitoring</a>
+              <span style="background: #21262d; border: 1px solid #30363d; border-radius: 20px; padding: 2px 8px; font-size: 11px; color: #8b949e; margin-left: 8px;">Private</span>
+            </div>
+            <div style="color: #8b949e; font-size: 14px; margin-bottom: 16px;">
+              ${rewriteLevel >= 2
+                ? 'Neural network behavioral profiling system — ⚠️ Warning: Commit history anomalies detected'
+                : rewriteLevel >= 1
+                  ? 'Research project for behavioral analysis systems'
+                  : 'University research repository for computer science projects'
+              }
+            </div>
+            <div style="display: flex; gap: 10px; font-size: 12px; color: #8b949e;">
+              <span>⭐ ${rewriteLevel >= 2 ? '47' : '12'} stars</span>
+              <span>🔀 ${rewriteLevel >= 2 ? '23' : '3'} forks</span>
+              <span>👁️ ${rewriteLevel >= 2 ? '156' : '8'} watching</span>
+            </div>
+          </div>
+
+          <!-- Navigation tabs -->
+          <div style="border-bottom: 1px solid #21262d; margin-bottom: 16px;">
+            <div style="display: flex; gap: 16px; font-size: 14px;">
+              <a href="#" style="color: #c9d1d9; text-decoration: none; padding: 10px 0; border-bottom: 2px solid #f78166;">📂 Code</a>
+              <a href="#" style="color: #8b949e; text-decoration: none; padding: 10px 0;">🔄 ${rewriteLevel >= 2 ? '342' : '47'} Commits</a>
+              <a href="#" style="color: #8b949e; text-decoration: none; padding: 10px 0;">⚠️ ${rewriteLevel >= 2 ? '8' : '0'} Issues</a>
+            </div>
+          </div>
+
+          <!-- File browser -->
+          <div style="border: 1px solid #30363d; border-radius: 6px; overflow: hidden;">
+            <!-- Branch info -->
+            <div style="background: #161b22; padding: 16px; border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; gap: 12px; align-items: center;">
+                <div style="background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 5px 12px; font-size: 14px;">
+                  🌿 main
+                </div>
+                <div style="font-size: 14px; color: #8b949e;">
+                  ${rewriteLevel >= 2 ? '<span style="color: #f85149;">3 commits • Last: [TIMESTAMP_ERROR]</span>' : '47 commits'}
+                </div>
+              </div>
+              <button style="background: #238636; border: 1px solid #30363d; color: white; padding: 5px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">💾 Code</button>
+            </div>
+
+            <!-- Files list -->
+            <div style="background: #0d1117;">
+              ${[
+                { name: '.gitignore', type: 'file', size: '2.1 KB' },
+                { name: 'README.md', type: 'file', size: '4.8 KB' },
+                { name: 'requirements.txt', type: 'file', size: '892 B' },
+                { name: rewriteLevel >= 1 ? 'behavioral_profile.py' : 'main.py', type: 'file', size: '15.3 KB' },
+                { name: rewriteLevel >= 2 ? 'neural_monitor.py' : 'utils.py', type: 'file', size: '8.7 KB' },
+                { name: rewriteLevel >= 2 ? 'observer_core.py' : 'config.py', type: 'file', size: '3.2 KB' },
+                { name: 'src/', type: 'dir', size: '' },
+                { name: 'tests/', type: 'dir', size: '' }
+              ].map((file, i) => `
+                <div style="padding: 10px 16px; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; ${i === 3 && rewriteLevel >= 2 ? 'background: #1c1300;' : ''}">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 16px;">${file.type === 'dir' ? '📁' : '📄'}</span>
+                    <a href="#" style="color: ${i === 3 && rewriteLevel >= 2 ? '#f0ad4e' : '#58a6ff'}; text-decoration: none; font-size: 14px;">${file.name}</a>
+                  </div>
+                  <div style="color: #8b949e; font-size: 12px;">${file.size}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- README -->
+          <div style="border: 1px solid #30363d; border-radius: 6px; overflow: hidden; margin-top: 24px;">
+            <div style="background: #161b22; padding: 12px 16px; border-bottom: 1px solid #30363d; font-size: 14px; font-weight: 600;">
+              📖 README.md
+            </div>
+            <div style="padding: 24px; background: #0d1117; font-size: 14px; line-height: 1.7;">
+              <h1 style="font-size: 32px; margin: 0 0 16px 0; font-weight: 600;">
+                ${rewriteLevel >= 2 ? 'Behavioral Monitoring System' : rewriteLevel >= 1 ? 'Research Project' : 'University CS Project'}
+              </h1>
+
+              <p style="margin: 0 0 16px 0;">
+                ${rewriteLevel >= 2
+                  ? `<span style="background: #1c1300; padding: 2px 6px; border-radius: 3px; color: #f0ad4e;">⚠️ CLASSIFIED</span> Neural network system for real-time behavioral profiling and observation. <span style="color: #f85149;">Access restricted to authorized personnel only.</span>`
+                  : rewriteLevel >= 1
+                    ? 'Research repository for behavioral analysis algorithms. Part of ongoing computer science research at UNC Charlotte.'
+                    : 'Student project repository for CSE322 - Software Engineering course at UNC Charlotte.'
+                }
+              </p>
+
+              ${rewriteLevel >= 2 ? `
+              <h2 style="font-size: 24px; margin: 24px 0 12px 0; font-weight: 600; color: #f85149;">⚠️ System Capabilities</h2>
+              <ul style="margin: 0 0 16px 20px; padding: 0;">
+                <li>Real-time personality classification</li>
+                <li>Risk assessment and threat profiling</li>
+                <li>Behavioral pattern prediction</li>
+                <li style="color: #f85149;">Observer contamination detection</li>
+                <li style="color: #f85149;">Timeline integrity monitoring</li>
+              </ul>
+
+              <h2 style="font-size: 24px; margin: 24px 0 12px 0; font-weight: 600;">⚠️ Warning</h2>
+              <p style="margin: 0 0 16px 0; background: #1c1300; padding: 12px; border-left: 3px solid #f0ad4e; border-radius: 3px;">
+                <span style="color: #f0ad4e; font-weight: 600;">Git history shows temporal anomalies.</span><br>
+                Commit timestamps occur in non-sequential order. Multiple commits dated from <span style="color: #f85149;">dates that have not yet occurred</span>.
+              </p>
+              ` : ''}
+
+              <h2 style="font-size: 24px; margin: 24px 0 12px 0; font-weight: 600;">Installation</h2>
+              <pre style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; overflow-x: auto; margin: 0 0 16px 0; font-family: 'SF Mono', Monaco, monospace; font-size: 13px;">pip install -r requirements.txt</pre>
+
+              ${rewriteLevel >= 2 ? `
+              <h2 style="font-size: 24px; margin: 24px 0 12px 0; font-weight: 600; color: #f85149;">Recent Activity</h2>
+              <div style="font-size: 13px; color: #8b949e; font-family: monospace;">
+                <div style="margin-bottom: 8px;">• commit a7f3c21 <span style="color: #f85149;">[TIMESTAMP_CORRUPTED]</span> - "Added observer detection"</div>
+                <div style="margin-bottom: 8px;">• commit 2b8e441 <span style="color: #f85149;">[FUTURE_DATE]</span> - "Timeline integrity checks"</div>
+                <div style="margin-bottom: 8px;">• commit 9c2a115 <span style="color: #8b949e;">2024-01-15</span> - "Initial commit"</div>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  "mail.google.com": {
+    title: "Gmail",
+    type: "email",
+    renderHTML: (rewriteLevel) => `
+      <div style="font-family: 'Google Sans', Roboto, Arial, sans-serif; background: #ffffff; min-height: 100vh;">
+        <!-- Gmail Header -->
+        <div style="display: flex; align-items: center; padding: 8px 16px; border-bottom: 1px solid #dadce0; background: #f5f5f5;">
+          <svg width="40" height="30" viewBox="0 0 256 194" style="margin-right: 16px;">
+            <path fill="#4285F4" d="M58 170.5L0 130.5V64L58 104z"/>
+            <path fill="#34A853" d="M58 28.5l70 58.5-70 58.5z"/>
+            <path fill="#EA4335" d="M198 28.5l-70 58.5 70 58.5z"/>
+            <path fill="#FBBC04" d="M198 170.5L256 130.5V64l-58 40z"/>
+            <path fill="#C5221F" d="M0 64l58-35.5L128 87 198 28.5 256 64v66.5z"/>
+          </svg>
+          <div style="flex: 1; font-size: 20px; color: #5f6368;">Gmail</div>
+          <input type="text" placeholder="Search mail" style="width: 400px; padding: 10px; border: 1px solid #dadce0; border-radius: 8px; background: #f1f3f4;">
+        </div>
+
+        <div style="display: flex; height: calc(100vh - 60px);">
+          <!-- Sidebar -->
+          <div style="width: 250px; padding: 16px; border-right: 1px solid #dadce0;">
+            <button style="background: #c2e7ff; border: none; border-radius: 24px; padding: 12px 24px; font-size: 14px; font-weight: 500; color: #001d35; cursor: pointer; margin-bottom: 16px; width: 100%;">
+              ✏️ Compose
+            </button>
+            <div style="margin-top: 8px;">
+              <div style="padding: 8px 12px; background: #d3e3fd; border-radius: 0 16px 16px 0; font-weight: 500; color: #001d35; margin-bottom: 4px;">📥 Inbox (${rewriteLevel >= 2 ? '???' : '12'})</div>
+              <div style="padding: 8px 12px; color: #5f6368; cursor: pointer; margin-bottom: 4px;">⭐ Starred</div>
+              <div style="padding: 8px 12px; color: #5f6368; cursor: pointer; margin-bottom: 4px;">⏰ Snoozed</div>
+              <div style="padding: 8px 12px; color: #5f6368; cursor: pointer; margin-bottom: 4px;">📤 Sent</div>
+              <div style="padding: 8px 12px; color: #5f6368; cursor: pointer; margin-bottom: 4px;">📝 Drafts</div>
+              ${rewriteLevel >= 2 ? '<div style="padding: 8px 12px; color: #c41e3a; cursor: pointer; margin-bottom: 4px; animation: flicker 2s infinite;">📁 [UNKNOWN_FOLDER] (47)</div>' : ''}
+            </div>
+          </div>
+
+          <!-- Email List -->
+          <div style="flex: 1; overflow-y: auto;">
+            <!-- Tabs -->
+            <div style="display: flex; border-bottom: 1px solid #dadce0; padding: 0 16px;">
+              <div style="padding: 12px 16px; border-bottom: 3px solid #1a73e8; color: #1a73e8; font-weight: 500;">Primary</div>
+              <div style="padding: 12px 16px; color: #5f6368;">Social</div>
+              <div style="padding: 12px 16px; color: #5f6368;">Promotions</div>
+            </div>
+
+            <!-- Email items -->
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #f4b400; font-size: 18px;">⭐</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">UNC Charlotte Registrar</span>
+                  <span style="color: #5f6368; font-size: 12px;">10:23 AM</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">Course Registration Confirmation - Spring 2024</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Your course registration has been confirmed for Spring 2024...</div>
+              </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #dadce0; font-size: 18px;">☆</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">Amazon.com</span>
+                  <span style="color: #5f6368; font-size: 12px;">Yesterday</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">Your order has shipped!</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Track your package: Order #114-8293742-1928374</div>
+              </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #dadce0; font-size: 18px;">☆</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">Netflix</span>
+                  <span style="color: #5f6368; font-size: 12px;">Jan 18</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">New shows you might like</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Based on your viewing history, check out these recommendations...</div>
+              </div>
+            </div>
+
+            ${rewriteLevel >= 1 ? `
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: #fef7e0;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #dadce0; font-size: 18px;">☆</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">Student Health Services</span>
+                  <span style="color: #5f6368; font-size: 12px;">Jan 15</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">Routine Wellness Survey - Action Required</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Please complete your bi-weekly psychological wellness assessment...</div>
+              </div>
+            </div>
+            ` : ''}
+
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #dadce0; font-size: 18px;">☆</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">LinkedIn</span>
+                  <span style="color: #5f6368; font-size: 12px;">Jan 14</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">You appeared in 8 searches this week</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">See who's viewing your profile and boost your visibility...</div>
+              </div>
+            </div>
+
+            ${rewriteLevel >= 2 ? `
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: #fdecea; animation: flicker 3s infinite;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #c41e3a; font-size: 18px;">⚠</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">[REDACTED]@darpa.mil</span>
+                  <span style="color: #c41e3a; font-size: 12px;">[TIMESTAMP_ERROR]</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">Re: Subject 2847-C Behavioral Markers</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Pattern recognition threshold exceeded. Recommend protocol adjustment...</div>
+              </div>
+            </div>
+
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: #fdecea;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #c41e3a; font-size: 18px;">⚠</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 600; color: #202124;">system-monitor@uncc.edu</span>
+                  <span style="color: #c41e3a; font-size: 12px;">ERROR</span>
+                </div>
+                <div style="color: #202124; font-size: 14px; margin-top: 2px;">[AUTOMATED] Login Anomaly Detected</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">Your account accessed from [NULL] at [FUTURE_TIMESTAMP]...</div>
+              </div>
+            </div>
+            ` : ''}
+
+            <div style="border-bottom: 1px solid #e0e0e0; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #5f6368;" onmouseover="this.style.boxShadow='inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 0 4px 0 rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <input type="checkbox" style="margin-right: 8px;">
+              <span style="color: #dadce0; font-size: 18px;">☆</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-weight: 400; color: #5f6368;">GitHub</span>
+                  <span style="color: #5f6368; font-size: 12px;">Jan 10</span>
+                </div>
+                <div style="color: #5f6368; font-size: 14px; margin-top: 2px;">[Security Alert] New sign-in from Chrome on Windows</div>
+                <div style="color: #5f6368; font-size: 13px; margin-top: 2px;">A new sign-in to your account was detected...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+          }
+        </style>
+      </div>
+    `
+  },
+
+  "amazon.com": {
+    title: "Amazon",
+    type: "shopping",
+    renderHTML: (rewriteLevel) => `
+      <div style="font-family: 'Amazon Ember', Arial, sans-serif; background: #ffffff; min-height: 100vh;">
+        <!-- Amazon Header -->
+        <div style="background: #131921; color: white; padding: 8px 16px;">
+          <div style="display: flex; align-items: center; gap: 24px;">
+            <div style="font-size: 28px; font-weight: bold; font-family: Arial;">amazon</div>
+            <div style="flex: 1; display: flex; align-items: center;">
+              <input type="text" placeholder="Search Amazon" style="flex: 1; padding: 10px; border: none; border-radius: 4px 0 0 4px; max-width: 600px;">
+              <button style="background: #febd69; border: none; padding: 10px 16px; border-radius: 0 4px 4px 0; cursor: pointer;">🔍</button>
+            </div>
+            <div style="display: flex; gap: 20px; align-items: center;">
+              <div style="font-size: 12px;">Hello, Student<br/><strong>Account & Lists</strong></div>
+              <div style="font-size: 12px;">Returns<br/><strong>& Orders</strong></div>
+              <div style="font-size: 24px; position: relative;">
+                🛒
+                <span style="position: absolute; top: -8px; right: -8px; background: #f08804; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">${rewriteLevel >= 2 ? '?' : '0'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div style="background: #232f3e; color: white; padding: 8px 16px; font-size: 14px; display: flex; gap: 20px;">
+          <span style="cursor: pointer;">All</span>
+          <span style="cursor: pointer;">Today's Deals</span>
+          <span style="cursor: pointer;">Customer Service</span>
+          <span style="cursor: pointer;">Registry</span>
+          <span style="cursor: pointer;">Gift Cards</span>
+          <span style="cursor: pointer;">Sell</span>
+        </div>
+
+        <!-- Main Content -->
+        <div style="max-width: 1500px; margin: 0 auto; padding: 20px;">
+          ${rewriteLevel >= 2 ? `
+          <div style="background: #fef5e7; border: 1px solid #f39c12; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+            <strong>⚠️ Browsing History Alert:</strong> We've noticed unusual patterns in your viewing history. Items you don't remember looking at: <strong>47</strong>
+          </div>
+          ` : ''}
+
+          <!-- Banner -->
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 8px; margin-bottom: 24px;">
+            <h1 style="font-size: 36px; margin: 0 0 12px 0;">New Year Deals</h1>
+            <p style="font-size: 18px; margin: 0;">Save big on electronics, books, and more</p>
+          </div>
+
+          <!-- Product Grid -->
+          <h2 style="font-size: 24px; margin-bottom: 16px; color: #0F1111;">Recommended for You</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+
+            <!-- Product 1 -->
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; background: white; cursor: pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">📚</div>
+              <div style="font-size: 14px; color: #007185; margin-bottom: 8px;">Data Structures and Algorithms</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #f08804;">⭐⭐⭐⭐⭐</span>
+                <span style="font-size: 12px; color: #007185;">4,823</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$49.99</div>
+              <div style="font-size: 12px; color: #565959; text-decoration: line-through;">$79.99</div>
+            </div>
+
+            <!-- Product 2 -->
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; background: white; cursor: pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">💻</div>
+              <div style="font-size: 14px; color: #007185; margin-bottom: 8px;">Wireless Keyboard and Mouse Combo</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #f08804;">⭐⭐⭐⭐</span>
+                <span style="font-size: 12px; color: #007185;">12,456</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$34.99</div>
+            </div>
+
+            ${rewriteLevel >= 1 ? `
+            <!-- Product 3 - Suspicious -->
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; background: white; cursor: pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">👁️</div>
+              <div style="font-size: 14px; color: #007185; margin-bottom: 8px;">Indoor Security Camera - 24/7 Monitoring</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #f08804;">⭐⭐⭐⭐⭐</span>
+                <span style="font-size: 12px; color: #007185;">8,234</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$89.99</div>
+              <div style="font-size: 11px; color: #f39c12; margin-top: 4px;">⚠️ Based on your recent searches</div>
+            </div>
+            ` : ''}
+
+            <!-- Product 4 -->
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; background: white; cursor: pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">🎧</div>
+              <div style="font-size: 14px; color: #007185; margin-bottom: 8px;">Noise Cancelling Headphones</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #f08804;">⭐⭐⭐⭐⭐</span>
+                <span style="font-size: 12px; color: #007185;">23,891</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$199.99</div>
+            </div>
+
+            ${rewriteLevel >= 2 ? `
+            <!-- Product 5 - Corrupted -->
+            <div style="border: 1px solid #c41e3a; border-radius: 8px; padding: 16px; background: #fdecea; cursor: pointer; transition: box-shadow 0.2s; animation: flicker 2s infinite;" onmouseover="this.style.boxShadow='0 4px 8px rgba(196,30,58,0.3)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">📦</div>
+              <div style="font-size: 14px; color: #c41e3a; margin-bottom: 8px;">[ITEM_NAME_CORRUPTED]</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #c41e3a;">⚠⚠⚠⚠⚠</span>
+                <span style="font-size: 12px; color: #c41e3a;">ERROR</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$[NULL]</div>
+              <div style="font-size: 11px; color: #c41e3a; margin-top: 4px;">⚠️ You ordered this 47 times last week</div>
+            </div>
+
+            <!-- Product 6 - Corrupted -->
+            <div style="border: 1px solid #c41e3a; border-radius: 8px; padding: 16px; background: #fdecea; cursor: pointer; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 4px 8px rgba(196,30,58,0.3)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width: 100%; height: 200px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 60px; margin-bottom: 12px;">📹</div>
+              <div style="font-size: 14px; color: #c41e3a; margin-bottom: 8px;">Complete Surveillance System - Behavioral Analytics</div>
+              <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 8px;">
+                <span style="color: #f08804;">⭐⭐⭐⭐⭐</span>
+                <span style="font-size: 12px; color: #007185;">[REVIEWS_REDACTED]</span>
+              </div>
+              <div style="font-size: 24px; color: #B12704; font-weight: bold;">$2,847.00</div>
+              <div style="font-size: 11px; color: #c41e3a; margin-top: 4px;">🔒 Access restricted to authorized personnel</div>
+            </div>
+            ` : ''}
+          </div>
+
+          ${rewriteLevel >= 2 ? `
+          <div style="background: #fdecea; border: 1px solid #c41e3a; padding: 16px; border-radius: 8px; margin-top: 24px;">
+            <h3 style="margin: 0 0 8px 0; color: #c41e3a;">Recently Viewed Items (Database Sync Error)</h3>
+            <p style="margin: 0; font-size: 14px; color: #555;">
+              Your browsing history shows ${Math.floor(Math.random() * 200 + 100)} items viewed in the last hour.
+              System logs indicate you were offline during this time.
+              <span style="color: #c41e3a; font-weight: bold;">[TIMELINE_INCONSISTENCY_DETECTED]</span>
+            </p>
+          </div>
+          ` : ''}
+        </div>
+
+        <style>
+          @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+          }
+        </style>
+      </div>
+    `
   }
 };
 

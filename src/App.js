@@ -20,6 +20,7 @@ import { StoryEngine } from "./storyEngine"
 import RedditForum from "./RedditForum"
 import InteractiveRedditForum from "./InteractiveRedditForum"
 import NinerNetLogin from "./NinerNetLogin"
+import WellnessSurvey from "./WellnessSurvey"
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -53,6 +54,8 @@ function App() {
   const [showSpreadsheet, setShowSpreadsheet] = useState(false)
   const [showFaceTracker, setShowFaceTracker] = useState(false)
   const [showRedditForum, setShowRedditForum] = useState(false)
+  const [showWellnessSurvey, setShowWellnessSurvey] = useState(false)
+  const [wellnessSurveyTriggered, setWellnessSurveyTriggered] = useState(false)
 
   // Refs for draggable windows
   const messagesRef = useRef(null)
@@ -1049,6 +1052,10 @@ Current Articles: ${currentArticles}
                 <option value="parapedia.net">https://parapedia.net</option>
                 <option value="worldtruth.biz">https://worldtruth.biz</option>
                 <option value="deepwatch.org">https://deepwatch.org</option>
+                <option value="cnn-news.com">https://cnn-news.com</option>
+                <option value="github-code.dev">https://github-code.dev</option>
+                <option value="mail.google.com">https://mail.google.com</option>
+                <option value="amazon.com">https://amazon.com</option>
                 {storyEngine.isMirrorActive() && <option value="mirror://">mirror://corrupted.node</option>}
                 {storyEngine.getCurrentPhase() === "collapse" && (
                   <option value="neuralcurrent.feed">https://neuralcurrent.feed</option>
@@ -1063,7 +1070,22 @@ Current Articles: ${currentArticles}
           <div className="browser-content" style={{ height: 'calc(100% - 88px)', overflow: 'auto' }}>
             {page.renderHTML ? (
               // Render custom HTML for realistic sites
-              <div dangerouslySetInnerHTML={{ __html: page.renderHTML(rewriteLevel) }} />
+              <div
+                dangerouslySetInnerHTML={{ __html: page.renderHTML(rewriteLevel) }}
+                onClick={(e) => {
+                  // Check if clicking on wellness survey email in Gmail
+                  if (currentSite === "mail.google.com" && !wellnessSurveyTriggered) {
+                    const target = e.target;
+                    const emailRow = target.closest('[data-wellness-email]') ||
+                                    (target.textContent && target.textContent.includes('Routine Wellness Survey'));
+
+                    if (emailRow || (target.textContent && target.textContent.includes('wellness assessment'))) {
+                      setShowWellnessSurvey(true);
+                      setWellnessSurveyTriggered(true);
+                    }
+                  }
+                }}
+              />
             ) : (
               // Fallback to original article rendering
               <div className="article-content">
@@ -1271,6 +1293,37 @@ Current Articles: ${currentArticles}
           </div>
         </div>
       </div>
+
+      {/* WELLNESS SURVEY */}
+      {showWellnessSurvey && (
+        <WellnessSurvey
+          onComplete={(answers) => {
+            // Close survey
+            setShowWellnessSurvey(false);
+
+            // Advance investigation based on how they answered
+            const investigationBoost = storyEngine.storyState.investigationDepth > 50 ? 8 : 5;
+            storyEngine.advanceInvestigation(investigationBoost);
+            behaviorTracker.track('completed_wellness_survey', {
+              answers,
+              investigationDepth: storyEngine.storyState.investigationDepth
+            });
+
+            // Update behavior profile
+            const profile = behaviorTracker.getProfile();
+            storyEngine.updatePhase(profile);
+
+            // Show notification
+            showNotification(
+              storyEngine.storyState.investigationDepth > 60
+                ? "Your behavioral assessment has been recorded. Anomalies detected."
+                : "Thank you for completing the wellness survey.",
+              storyEngine.storyState.investigationDepth > 60 ? 'error' : 'info'
+            );
+          }}
+          investigationDepth={storyEngine.storyState.investigationDepth}
+        />
+      )}
     </div>
   )
 }
