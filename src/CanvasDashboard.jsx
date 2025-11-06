@@ -1,7 +1,6 @@
-import { useState } from "react";
 import "./CanvasDashboard.css";
 
-export default function CanvasDashboard({ onAssignmentClick, username }) {
+export default function CanvasDashboard({ onAssignmentClick }) {
   return (
     <div className="canvas-page">
       {/* Canvas Header */}
@@ -77,22 +76,22 @@ export default function CanvasDashboard({ onAssignmentClick, username }) {
 
           {/* Course Cards */}
           <div className="canvas-courses">
-            {/* BINF Course */}
+            {/* ITCS 3160 Course */}
             <div className="canvas-course-card">
-              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%234a9eff'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='60' font-family='Arial'%3EDNA%3C/text%3E%3C/svg%3E')" }}>
-                <div className="course-code">202580-FALL 2025-BINF-3101-001-SEQUENCE ANALYSIS</div>
+              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%234a9eff'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='50' font-family='Arial'%3EDATABASE%3C/text%3E%3C/svg%3E')" }}>
+                <div className="course-code">202580-FALL 2025-ITCS-3160-001-DATABASE DESIGN</div>
               </div>
               <div className="course-assignments">
                 <div className="assignment-item">
                   <input type="checkbox" />
                   <span className="assignment-icon">📝</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">202580-FALL 2025-BINF-3101-001-SEQUENCE ANALYSIS ASSIGNMENT</div>
-                    <div className="assignment-title">RAQ #20</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3160-001-DATABASE DESIGN ASSIGNMENT</div>
+                    <div className="assignment-title">SQL Query Optimization Lab</div>
                   </div>
                   <div className="assignment-meta">
                     <span className="assignment-status missing">Missing</span>
-                    <span className="assignment-points">0.75 PTS</span>
+                    <span className="assignment-points">15 PTS</span>
                     <span className="assignment-due">DUE: 1:00 PM</span>
                   </div>
                 </div>
@@ -100,29 +99,29 @@ export default function CanvasDashboard({ onAssignmentClick, username }) {
                   <input type="checkbox" />
                   <span className="assignment-icon">📝</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">202580-FALL 2025-BINF-3101-001-SEQUENCE ANALYSIS ASSIGNMENT</div>
-                    <div className="assignment-title">Lab 10 Worksheet: TFs</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3160-001-DATABASE DESIGN ASSIGNMENT</div>
+                    <div className="assignment-title">ER Diagram Project</div>
                   </div>
                   <div className="assignment-meta">
-                    <span className="assignment-points">3 PTS</span>
+                    <span className="assignment-points">25 PTS</span>
                     <span className="assignment-due">DUE: 11:59 PM</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* BIOL Course */}
+            {/* ITCS 4180 Course */}
             <div className="canvas-course-card">
-              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%2328a745'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='50' font-family='Arial'%3EBIOLOGY%3C/text%3E%3C/svg%3E')" }}>
-                <div className="course-code">202580-FALL 2025-BIOL-3166L_COMBINED</div>
+              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%2328a745'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='50' font-family='Arial'%3EMOBILE%3C/text%3E%3C/svg%3E')" }}>
+                <div className="course-code">202580-FALL 2025-ITCS-4180-002-MOBILE APP DEVELOPMENT</div>
               </div>
               <div className="course-assignments">
                 <div className="assignment-item">
                   <input type="checkbox" />
                   <span className="assignment-icon">💬</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">202580-FALL 2025-BIOL-3166L_COMBINED ANNOUNCEMENT</div>
-                    <div className="assignment-title">L04 and L06: Week 8 Intro</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-4180-002-MOBILE APP DEVELOPMENT ANNOUNCEMENT</div>
+                    <div className="assignment-title">Week 8: React Native Navigation</div>
                   </div>
                   <div className="assignment-meta">
                     <span className="assignment-status replies">Replies</span>
@@ -132,21 +131,21 @@ export default function CanvasDashboard({ onAssignmentClick, username }) {
               </div>
             </div>
 
-            {/* MATH Course - THE SPECIAL ONE */}
+            {/* ITCS 3156 Course - THE SPECIAL ONE */}
             <div className="canvas-course-card" onClick={onAssignmentClick} style={{ cursor: "pointer" }}>
-              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e91e63'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3EMATH%3C/text%3E%3C/svg%3E')" }}>
-                <div className="course-code">202580-FALL 2025-MATH-2164-003-MATRICES & LINEAR ALGEBRA</div>
+              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e91e63'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3EMACHINE%3C/text%3E%3Ctext x='200' y='200' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3ELEARNING%3C/text%3E%3C/svg%3E')" }}>
+                <div className="course-code">202580-FALL 2025-ITCS-3156-001-MACHINE LEARNING</div>
               </div>
               <div className="course-assignments">
                 <div className="assignment-item" style={{ background: "#fef7e0", border: "2px solid #f0ad4e" }}>
                   <input type="checkbox" />
                   <span className="assignment-icon">📝</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">202580-FALL 2025-MATH-2164-003-MATRICES & LINEAR ALGEBRA ASSIGNMENT</div>
-                    <div className="assignment-title" style={{ color: "#d97706", fontWeight: "600" }}>6.3 - HPC Cluster Access Required</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3156-001-MACHINE LEARNING ASSIGNMENT</div>
+                    <div className="assignment-title" style={{ color: "#d97706", fontWeight: "600" }}>Lab 4: Neural Network Training on HPC Cluster</div>
                   </div>
                   <div className="assignment-meta">
-                    <span className="assignment-points">10 PTS</span>
+                    <span className="assignment-points">100 PTS</span>
                     <span className="assignment-due">DUE: 11:59 PM</span>
                   </div>
                 </div>
@@ -154,8 +153,8 @@ export default function CanvasDashboard({ onAssignmentClick, username }) {
                   <input type="checkbox" />
                   <span className="assignment-icon">📝</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">202580-FALL 2025-MATH-2164-003-MATRICES & LINEAR ALGEBRA PAGE</div>
-                    <div className="assignment-title">nov5 6.2-3</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3156-001-MACHINE LEARNING PAGE</div>
+                    <div className="assignment-title">Week 7: Gradient Descent</div>
                   </div>
                   <div className="assignment-meta">
                     <span className="assignment-due">TO DO: 11:59 PM</span>
@@ -164,22 +163,22 @@ export default function CanvasDashboard({ onAssignmentClick, username }) {
               </div>
             </div>
 
-            {/* Project Card */}
+            {/* ITCS 3153 Course */}
             <div className="canvas-course-card">
-              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%236c757d'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3EPROJECT%3C/text%3E%3C/svg%3E')" }}>
-                <div className="course-code">PROJECT - PAL MATH 2164 RESOURCE PAGE - FALL 2025</div>
+              <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%236c757d'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='35' font-family='Arial'%3EDATA%3C/text%3E%3Ctext x='200' y='190' text-anchor='middle' fill='white' font-size='35' font-family='Arial'%3ESTRUCTURES%3C/text%3E%3C/svg%3E')" }}>
+                <div className="course-code">202580-FALL 2025-ITCS-3153-002-DATA STRUCTURES & ALGORITHMS</div>
               </div>
               <div className="course-assignments">
                 <div className="assignment-item">
                   <input type="checkbox" />
                   <span className="assignment-icon">📅</span>
                   <div className="assignment-details">
-                    <div className="assignment-course">PROJECT - PAL MATH 2164 RESOURCE PAGE - FALL 2025 CALENDAR EVENT</div>
-                    <div className="assignment-title">PAL SESSION - MATH 2164</div>
-                    <div className="assignment-subtitle">DENNY 106</div>
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3153-002-DATA STRUCTURES & ALGORITHMS CALENDAR EVENT</div>
+                    <div className="assignment-title">Office Hours - Graph Algorithms</div>
+                    <div className="assignment-subtitle">WOODWARD 350</div>
                   </div>
                   <div className="assignment-meta">
-                    <span className="assignment-due">5:00 PM to 6:00 PM</span>
+                    <span className="assignment-due">3:00 PM to 4:30 PM</span>
                   </div>
                 </div>
               </div>

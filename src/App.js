@@ -21,11 +21,15 @@ import RedditForum from "./RedditForum"
 import InteractiveRedditForum from "./InteractiveRedditForum"
 import NinerNetLogin from "./NinerNetLogin"
 import WellnessSurvey from "./WellnessSurvey"
+import CanvasDashboard from "./CanvasDashboard"
+import HPCAccess from "./HPCAccess"
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
-  const [showTerminalOnly, setShowTerminalOnly] = useState(false) // Terminal screen after login
+  const [showCanvas, setShowCanvas] = useState(false) // Canvas dashboard after login
+  const [showHPCAccess, setShowHPCAccess] = useState(false) // HPC page after clicking assignment
+  const [showTerminalOnly, setShowTerminalOnly] = useState(false) // Terminal screen after HPC
   const [showIntro, setShowIntro] = useState(false) // Incident report after terminal
   const [showTrustPrompt, setShowTrustPrompt] = useState(false)
   const [pendingFile, setPendingFile] = useState(null)
@@ -605,11 +609,11 @@ Current Articles: ${currentArticles}
   const handleLogin = (username) => {
     setCurrentUser(username)
     setIsLoggedIn(true)
-    setShowTerminalOnly(true) // Show terminal first
+    setShowCanvas(true) // Show Canvas dashboard first
     behaviorTracker.trackSiteVisit('ninernet_login')
     storyEngine.advanceInvestigation(1) // Subtle start - just 1%
 
-    // Initialize terminal with login message
+    // Initialize terminal with login message (will be used later)
     setTerminalHistory([
       `Connected to lab-node-47.uncc.edu`,
       `Last login: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
@@ -635,42 +639,46 @@ Current Articles: ${currentArticles}
     return <NinerNetLogin onLogin={handleLogin} />
   }
 
-  // Show terminal-only screen after login
-  if (showTerminalOnly) {
+  // Show Canvas dashboard after login
+  if (showCanvas && !showIntro) {
     return (
-      <div className="w-screen h-screen bg-black text-green-400 font-mono p-8 overflow-auto">
-        <div className="max-w-5xl">
-          {terminalHistory.map((line, i) => (
-            <div key={i} className="whitespace-pre" style={{ fontSize: '14px', lineHeight: '1.4' }}>
-              {line}
-            </div>
-          ))}
-          <div className="flex items-center mt-1">
-            <span className="text-green-500">[{currentUser}@lab-node-47]$</span>
-            <input
-              type="text"
-              value={terminalInput}
-              onChange={(e) => setTerminalInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleTerminalOnlyCommand(terminalInput)
-                  setTerminalInput("")
-                }
-              }}
-              className="flex-1 ml-2 bg-transparent border-none outline-none text-green-400"
-              style={{ fontSize: '14px' }}
-              autoFocus
-              spellCheck={false}
-            />
-          </div>
-        </div>
-      </div>
-    )
+      <>
+        <CanvasDashboard
+          onAssignmentClick={() => {
+            setShowHPCAccess(true);
+          }}
+        />
+
+        {/* HPC Access as draggable overlay */}
+        {showHPCAccess && (
+          <HPCAccess
+            username={currentUser}
+            onAccessGranted={() => {
+              // After corrupted SSH command, trigger IntroOverlay
+              setShowHPCAccess(false);
+              setShowCanvas(false);
+              setShowIntro(true);
+            }}
+            onClose={() => {
+              setShowHPCAccess(false);
+            }}
+          />
+        )}
+      </>
+    );
   }
 
-  return showIntro ? (
-    <IntroOverlay onFinish={() => setShowIntro(false)} />
-  ) : (
+  // Show IntroOverlay (incident report) after corrupted SSH
+  if (showIntro) {
+    return <IntroOverlay onFinish={() => {
+      setShowIntro(false);
+      setShowTerminalOnly(true); // After intro, go to main desktop
+    }} />
+  }
+
+  // Main desktop environment
+  if (showTerminalOnly) {
+    return (
     <div
       className={`w-screen h-screen text-white flex flex-col ${isGlitching ? "glitch-bg" : ""}`}
       style={{
@@ -1304,10 +1312,9 @@ Current Articles: ${currentArticles}
             // Advance investigation based on how they answered
             const investigationBoost = storyEngine.storyState.investigationDepth > 50 ? 8 : 5;
             storyEngine.advanceInvestigation(investigationBoost);
-            behaviorTracker.track('completed_wellness_survey', {
-              answers,
-              investigationDepth: storyEngine.storyState.investigationDepth
-            });
+
+            // Track survey completion (using existing trackSiteVisit method as closest match)
+            behaviorTracker.trackSiteVisit('wellness_survey_completed');
 
             // Update behavior profile
             const profile = behaviorTracker.getProfile();
@@ -1325,7 +1332,11 @@ Current Articles: ${currentArticles}
         />
       )}
     </div>
-  )
+  );
+  }
+
+  // If none of the above conditions are met, return null
+  return null;
 }
 
 export default App
