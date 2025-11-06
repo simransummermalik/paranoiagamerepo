@@ -11,6 +11,30 @@ export default function RedditForum({ onClose, investigationDepth, onPostClick, 
   const [commentText, setCommentText] = useState({});
   const [isPostingComment, setIsPostingComment] = useState(false);
 
+  // Load saved posts from localStorage on mount
+  useEffect(() => {
+    const savedPosts = localStorage.getItem('redditForumPosts');
+    if (savedPosts) {
+      try {
+        const parsedPosts = JSON.parse(savedPosts);
+        setPosts(parsedPosts);
+        return; // Exit early if we loaded saved posts
+      } catch (error) {
+        console.error('Failed to load saved posts:', error);
+      }
+    }
+    // If no saved posts or loading failed, generate new ones
+    const homePosts = view === "home" ? generateHomeFeed() : generatePosts();
+    setPosts(homePosts);
+  }, []); // Only run on mount
+
+  // Save posts to localStorage whenever they change
+  useEffect(() => {
+    if (posts.length > 0) {
+      localStorage.setItem('redditForumPosts', JSON.stringify(posts));
+    }
+  }, [posts]);
+
   // Check if comment contains inappropriate content
   const isInappropriate = (text) => {
     const badWords = ['fuck', 'shit', 'damn', 'hell', 'ass', 'bitch', 'kill', 'die', 'idiot', 'stupid', 'dumb'];
