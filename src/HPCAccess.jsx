@@ -117,22 +117,74 @@ export default function HPCAccess({ onAccessGranted, username, onClose }) {
   };
 
   const typeCorruptedCommand = () => {
-    const corruptedCmd = "ssh --jjdjd://█RESTRICTED_ACCESS█@node-∞∞∞.UNKNOWN";
+    // Subtle: looks like a normal command at first
+    const subtleCmd = "ssh -L 8080:localhost:8080 observer@orion.uncc.edu";
 
-    typeCommand(corruptedCmd, () => {
+    typeCommand(subtleCmd, () => {
+      // Start with normal-looking output, then things go wrong
       setTerminalLines(prev => [
         ...prev,
-        `ERROR: Connection hijacked`,
-        `WARNING: Unauthorized protocol detected`,
-        `Redirecting to secure channel...`,
-        ``,
-        `▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓`,
+        `Connecting to orion.uncc.edu...`,
         ``,
       ]);
 
       setTimeout(() => {
-        onAccessGranted(); // Trigger IntroOverlay
-      }, 2000);
+        setTerminalLines(prev => [
+          ...prev,
+          `Warning: remote host identification has changed.`,
+          `IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!`,
+          `Someone could be eavesdropping on you right now (man-in-the-middle attack)!`,
+          ``,
+        ]);
+      }, 1200);
+
+      setTimeout(() => {
+        setTerminalLines(prev => [
+          ...prev,
+          `The fingerprint for the ECDSA key sent by the remote host is:`,
+          `SHA256:4f3a2e1d9c8b7a6f5e4d3c2b1a0987654321fedcba9876543210`,
+          ``,
+          `Host key verification failed.`,
+          ``,
+        ]);
+      }, 2400);
+
+      setTimeout(() => {
+        setTerminalLines(prev => [
+          ...prev,
+          `Connection closed by remote host.`,
+          ``,
+          `student@workstation:~$ `,
+        ]);
+      }, 3600);
+
+      // Auto-reconnect attempt (this triggers the actual horror)
+      setTimeout(() => {
+        setTerminalLines(prev => {
+          const updated = [...prev];
+          updated[updated.length - 1] = `student@workstation:~$ ssh ${username}@orion.uncc.edu`;
+          return updated;
+        });
+      }, 4800);
+
+      setTimeout(() => {
+        setTerminalLines(prev => [
+          ...prev,
+          ``,
+          `Connecting...`,
+          `Connection established.`,
+          ``,
+          `Last login: ${new Date().toLocaleDateString()} from 152.46.18.102`,
+          ``,
+          `You have 1 new message.`,
+          `Type 'msg read' to view messages.`,
+          ``,
+        ]);
+      }, 6000);
+
+      setTimeout(() => {
+        onAccessGranted(); // Trigger IntroOverlay after subtle build-up
+      }, 7500);
     });
   };
 

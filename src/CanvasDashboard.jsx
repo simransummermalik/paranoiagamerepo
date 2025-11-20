@@ -1,6 +1,6 @@
 import "./CanvasDashboard.css";
 
-export default function CanvasDashboard({ onAssignmentClick }) {
+export default function CanvasDashboard({ onAssignmentClick, onDiscussionClick }) {
   return (
     <div className="canvas-page">
       {/* Canvas Header */}
@@ -132,12 +132,12 @@ export default function CanvasDashboard({ onAssignmentClick }) {
             </div>
 
             {/* ITCS 3156 Course - THE SPECIAL ONE */}
-            <div className="canvas-course-card" onClick={onAssignmentClick} style={{ cursor: "pointer" }}>
+            <div className="canvas-course-card">
               <div className="course-thumbnail" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23e91e63'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3EMACHINE%3C/text%3E%3Ctext x='200' y='200' text-anchor='middle' fill='white' font-size='40' font-family='Arial'%3ELEARNING%3C/text%3E%3C/svg%3E')" }}>
                 <div className="course-code">202580-FALL 2025-ITCS-3156-001-MACHINE LEARNING</div>
               </div>
               <div className="course-assignments">
-                <div className="assignment-item" style={{ background: "#fef7e0", border: "2px solid #f0ad4e" }}>
+                <div className="assignment-item" onClick={onAssignmentClick} style={{ background: "#fef7e0", border: "2px solid #f0ad4e", cursor: "pointer" }}>
                   <input type="checkbox" />
                   <span className="assignment-icon">📝</span>
                   <div className="assignment-details">
@@ -147,6 +147,18 @@ export default function CanvasDashboard({ onAssignmentClick }) {
                   <div className="assignment-meta">
                     <span className="assignment-points">100 PTS</span>
                     <span className="assignment-due">DUE: 11:59 PM</span>
+                  </div>
+                </div>
+                <div className="assignment-item" onClick={onDiscussionClick} style={{ cursor: "pointer" }}>
+                  <input type="checkbox" />
+                  <span className="assignment-icon">💬</span>
+                  <div className="assignment-details">
+                    <div className="assignment-course">202580-FALL 2025-ITCS-3156-001-MACHINE LEARNING DISCUSSION</div>
+                    <div className="assignment-title">Lab 4 - Student Discussion Board</div>
+                  </div>
+                  <div className="assignment-meta">
+                    <span className="assignment-status replies">12 unread</span>
+                    <span className="assignment-due">ACTIVE</span>
                   </div>
                 </div>
                 <div className="assignment-item">
